@@ -1,0 +1,255 @@
+<html>
+  <head>
+    <style>
+      :root {
+        --accent-color: #fff5fa;
+        --header-font: "Oooh Baby", sans-serif;
+        --body-font: "Inria Serif", sans-serif;
+        --deep-rose: #4e162d;
+        --soft-shadow: rgba(78, 22, 45, 0.1);
+        --button-shadow: rgba(97, 9, 9, 0.555);
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: var(--body-font);
+        background: url("./img/lowopacitygrid.png") no-repeat center center;
+        background-size: cover;
+        background-blend-mode: lighten;
+        color: var(--deep-rose);
+        text-align: center;
+        animation: lightgradientshift 20s ease-in-out infinite;
+        animation-delay: 2s;
+        animation-play-state: alternate;
+      }
+
+      @keyframes lightgradientshift {
+        0% {
+          background-position: 0% 50%;
+          background-size: cover;
+        }
+        50% {
+          background-position: 100% 50%;
+          background-size: cover;
+        }
+        100% {
+          background-position: 0% 50%;
+          background-size: cover;
+        }
+      }
+
+      .fadesection {
+        opacity: 0;
+        transform: translateY(60px);
+        transition: opacity 1s ease-out, transform 1s ease-out;
+        position: relative;
+        z-index: 1;
+      }
+
+      .fadesection.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .herosection {
+        padding: 10vh 5vw 10vh 5vw; 
+      }
+
+      #appname {
+        color: black;
+        font-family: var(--header-font);
+        font-size: 15vw;
+        margin-bottom: 2vh;
+        text-shadow: 0 0 60px rgba(37, 4, 15, 0.692);
+      }
+
+      #appintro {
+        font-size: 5vw;
+        max-width: 800px;
+        margin: 0 auto 5vh auto;
+        line-height: 1.3;
+      }
+
+      #startbutton {
+        font-size: 5vw;
+        padding: 1rem 3rem;
+        border-radius: 3rem;
+        border: none;
+        background-color: var(--accent-color);
+        box-shadow: 0 0 40px var(--button-shadow);
+        font-family: var(--body-font);
+      }
+
+      a {
+        text-decoration: none;
+        color: #290a16;
+      }
+
+      .quotesection {
+        margin-top: -5vh;
+        padding: 6vh 5vw;
+        background-color: hsla(337, 32%, 92%, 0.164);
+        backdrop-filter: blur(30px);
+        border-radius: 25px;
+        box-shadow: 0 8px 30px var(--soft-shadow);
+        width: 90%;
+        max-width: 750px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      #twainquote {
+        font-family: var(--header-font);
+        font-size: 6vw;
+        line-height: 1.3;
+      }
+
+      .firstsection {
+        display: flex;
+        max-width: 750px;
+        margin: -5vh auto 0 auto;
+        background-color: hsla(300, 17%, 90%, 0.747);
+        border-radius: 25px;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.3vh;
+        padding: 5vh 5vw;
+        width: 90%;
+        box-shadow: 0 8px 30px var(--soft-shadow);
+      }
+
+      .sharesection {
+       display: flex;
+        max-width: 750px;
+        margin: -5vh auto 0 auto;
+        background-color: hsla(300, 10%, 78%, 0.5);
+        border-radius: 25px;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.3vh;
+        padding: 5vh 5vw;
+        width: 90%;
+        box-shadow: 0 8px 30px var(--soft-shadow);
+      }
+
+      .tasksection {
+       display: flex;
+        max-width: 750px;
+        margin: -5vh auto 0 auto;
+        background-color: hsla(272, 7%, 61%, 0.37);
+        border-radius: 25px;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.3vh;
+        padding: 5vh 5vw;
+        width: 90%;
+        box-shadow: 0 8px 30px var(--soft-shadow);
+      }
+
+ 
+      .brushsectioncontent .sharesectioncontent .tasksectioncontent {
+        display: flex;
+        align-items: center;
+        gap: 2vw;
+        flex-direction: row;
+        justify-content: center;
+      }
+
+      /*styling is also identical for each of these sections, but decided to separate it for clarity */
+      .brushsectionmessage {
+        font-size: 40pt;
+        max-width: 700px;
+        line-height: 1.4;
+        text-align: center;
+        margin-top: 0;
+      }
+
+      .sharesectionmessage {
+        font-size: 40pt;
+        max-width: 700px;
+        line-height: 1.4;
+        text-align: center;
+        margin-top: 0;
+      }
+
+      .tasksectionmessage {
+        font-size: 40pt;
+        max-width: 700px;
+        line-height: 1.4;
+        text-align: center;
+        margin-top: 0;
+      }
+
+      #sectiontitle {
+        font-size: 41pt;
+        margin: 2px;
+        color: black;
+        margin-bottom: 1vh;
+        font-family: "Noto Serif", serif;
+      }
+    </style>
+    <link href="https://fonts.cdnfonts.com/css/oooh-baby" rel="stylesheet" />
+    <link href="https://fonts.cdnfonts.com/css/inria-serif" rel="stylesheet" />
+  </head>
+  <body>
+   <body>
+  <section class="herosection fadesection">
+    <h1 id="appname">Planoria</h1>
+    <p id="appintro">
+     Organize your life, share your progress with friends, and make a planner that's uniquely yours.
+    </p>
+    <button id="startbutton"><a href="signuppage.html">Get Started</a></button>
+  </section>
+
+  <section class="quotesection fadesection">
+    <h2 id="twainquote">
+      Plan for the future, because that is where you are going to spend the rest of your life. <br />~ Mark Twain ~
+    </h2>
+  </section>
+
+  <section class="firstsection fadesection">
+    <span class="brushicon"><img src="./img/brush.png"></span>
+    <p id="sectiontitle">PERSONALIZE</p>
+    <p class="brushsectionmessage">
+      Just because a planner means business doesn’t mean it can’t look fun.
+    </p>
+  </section>
+
+  <section class="sharesection fadesection">
+    <span class="friendsicon"><img src="./img/friends.png"></span>
+    <p id="sectiontitle">COLLABORATE</p>
+    <p class="sharesectionmessage">
+      Let everyone else know how busy you are with task sharing and friend groups.
+    </p>
+  </section>
+
+    <section class="tasksection fadesection">
+    <span class="tasklisticon"><img src="./img/listadd.png"></span>
+    <p id="sectiontitle">SIMPLIFY</p>
+    <p class="tasksectionmessage">
+      Add and manage all of your tasks in one simple, intuitive space. Perfect for school, work, or just plain, everyday life.
+    </p>
+  </section>
+
+<script>
+  var allsections = document.querySelectorAll(".fadesection");
+
+  function checkVisibility() {
+    for (var i = 0; i < allsections.length; i++) {
+      var section = allsections[i];
+      var box = section.getBoundingClientRect();
+
+      
+      if (box.top < window.innerHeight && box.bottom > 0) {
+        section.classList.add("visible");
+      }
+    }
+  }
+
+  window.addEventListener("load", checkVisibility);
+
+  window.addEventListener("scroll", checkVisibility);
+</script>
+</body>
+</html>

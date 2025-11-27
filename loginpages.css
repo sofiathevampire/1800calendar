@@ -1,0 +1,126 @@
+body {
+  background: url("./img/lowopacitygrid.png") no-repeat center center;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  animation: lightgradientshift 20s ease infinite;
+  font-family: "Inria Serif", sans-serif;
+  display: flex;
+}
+
+#backarrow img {
+  position: fixed;
+  bottom: 0px;
+  right: 70px;
+  width: 80px;
+}
+
+@keyframes lightgradientshift {
+  0% {
+    background-position: 0% 50%;
+    background-size: cover;
+  }
+  50% {
+    background-position: 100% 50%;
+    background-size: cover;
+  }
+  100% {
+    background-position: 0% 50%;
+    background-size: cover;
+  }
+}
+
+.loginsection {
+  background-color: #fff8fbce;
+  padding: 5rem 10rem;
+  border-radius: 25px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.479);
+  text-align: center;
+  width: 100%;
+  max-width: 550px;
+}
+
+.loginsection h2 {
+  font-family: "Oooh Baby", sans-serif;
+  width: 100%;
+  font-size: 64pt;
+  margin: 0 0 0.5rem 0; /*top right bottom left*/
+  color: #270a16;
+  text-align: center;
+}
+
+.continuesubtitle {
+  font-size: 30pt;
+  color: #6a5d66;
+  margin-bottom: 2rem;
+}
+
+.loginbox input {
+  border-radius: 20px;
+  font-size: 30pt;
+  font-family: "Inria Serif", sans-serif;
+  background-color: #fdf9fb;
+  outline: none;
+  transition: border-color 0.3s ease;
+  width: 100%;
+  padding: 10px 20px;
+  margin-bottom: 1.2rem;
+  border: 7px solid #e0d6dc;
+}
+
+#loginbutton {
+  width: 50%;
+  padding: 0.8rem;
+  background-color: #756770b6;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 30pt;
+  font-family: "Inria Serif", sans-serif;
+  transition: background-color 0.3s ease;
+}
+
+.signupmessage {
+  margin: 2rem -6rem 0 -6rem; /*top right bottom left*/
+  font-size: 12pt;
+  color: #6a5d66;
+  font-size: 30pt;
+}
+
+a {
+  color: #4e162d;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.loginsection {
+  animation: fadein 1.5s ease-out;
+}
+
+#loginbutton {
+  transition: all 0.3s ease;
+}
+
+#backarrow {
+  position: relative;
+  top: 4rem;
+  left: 2rem;
+  z-index: 10;
+  width: 2rem;
+  height: auto;
+  animation: none;
+  transition: none;
+  translate: 0;
+}

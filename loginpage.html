@@ -1,0 +1,76 @@
+<html>
+  <head>
+    <link href="https://fonts.cdnfonts.com/css/oooh-baby" rel="stylesheet" />
+    <link href="https://fonts.cdnfonts.com/css/inria-serif" rel="stylesheet" />
+    <link rel="stylesheet" href="loginpages.css" />
+  </head>
+  <body>
+    <div class="loginsection">
+      <div id="backarrow" onclick="window.history.back()">
+        <img src="./img/back.png" width="110px" />
+      </div>
+      <h2>Welcome Back</h2>
+      <p class="continuesubtitle">Log in to continue!</p>
+      <form class="loginbox">
+        <input type="email" placeholder="Email" required />
+        <input type="password" placeholder="Password" required />
+        <br />
+        <button type="submit" id="loginbutton">Log In</button>
+      </form>
+      <p class="signupmessage">
+        Don't have an account? <a href="signuppage.html">Sign up</a>
+      </p>
+
+      <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+        import {
+          getAuth,
+          signInWithEmailAndPassword,
+        } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyC1X3eQaWxuFZt-Jrrzxl_X7RPzD1ooRd8",
+          authDomain: "calendar-app-eeda4.firebaseapp.com",
+          projectId: "calendar-app-eeda4",
+          storageBucket: "calendar-app-eeda4.appspot.com",
+          messagingSenderId: "135200443171",
+          appId: "1:135200443171:web:d842dc61da8fcae97d5a96",
+          measurementId: "G-B0DBRK6MM2",
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        /* --- FOR LOGGING IN --- */
+        const form = document.querySelector(".loginbox");
+
+        form.addEventListener("submit", async (event) => {
+          event.preventDefault(); // stops the page from refreshing
+
+          const email = form.querySelector("input[type='email']").value;
+          const password = form.querySelector("input[type='password']").value;
+
+          // signs in with an email and password
+          try {
+            const usercredenetials = await signInWithEmailAndPassword(
+              auth,
+              email,
+              password
+            );
+
+            // logs the user id to the console if it went fine
+            console.log(
+              "You're successfully logged in!",
+              usercredenetials.user.uniqueID
+            );
+
+            // redirects to main calendar page
+            window.location.href = "sofiascalendar.html";
+          } catch (error) {
+            alert("Something went wrong! " + error.message);
+          }
+        });
+      </script>
+    </div>
+  </body>
+</html>

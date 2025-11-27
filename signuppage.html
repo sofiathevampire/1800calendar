@@ -1,0 +1,86 @@
+<html>
+  <head>
+    <link href="https://fonts.cdnfonts.com/css/oooh-baby" rel="stylesheet" />
+    <link href="https://fonts.cdnfonts.com/css/inria-serif" rel="stylesheet" />
+    <link rel="stylesheet" href="loginpages.css" />
+  </head>
+  <body>
+    <div class="loginsection">
+      <div id="backarrow" onclick="window.history.back()">
+        <img src="./img/back.png" width="110px" />
+      </div>
+      <h2>Sign Up</h2>
+      <p class="continuesubtitle">Create an account to get started!</p>
+      <form class="loginbox">
+        <input type="text" placeholder="Username" required />
+        <br />
+        <input type="email" placeholder="Email" required />
+        <br />
+        <input type="password" placeholder="Password" required />
+        <br />
+        <button type="submit" id="loginbutton">Sign Up</button>
+      </form>
+      <p class="signupmessage">
+        Already have an account? <a href="loginpage.html">Sign in</a>
+      </p>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+      import {
+        getAuth,
+        createUserWithEmailAndPassword,
+      } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+      import {
+        getFirestore,
+        doc,
+        setDoc,
+      } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyC1X3eQaWxuFZt-Jrrzxl_X7RPzD1ooRd8",
+        authDomain: "calendar-app-eeda4.firebaseapp.com",
+        projectId: "calendar-app-eeda4",
+        storageBucket: "calendar-app-eeda4.appspot.com",
+        messagingSenderId: "135200443171",
+        appId: "1:135200443171:web:d842dc61da8fcae97d5a96",
+        measurementId: "G-B0DBRK6MM2",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      const form = document.querySelector(".loginbox");
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const username = form.querySelector("input[type='text']").value;
+        const email = form.querySelector("input[type='email']").value;
+        const password = form.querySelector("input[type='password']").value;
+
+        try {
+          const usercredentials = await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
+          );
+          const uniqueID = usercredentials.user.uid;
+
+          await setDoc(doc(db, "users", uniqueID), {
+            username: username,
+            email: email,
+            createdAt: new Date(),
+          });
+
+          console.log("You succesfully signed up!", uniqueID);
+
+          window.location.href = "sofiascalendar.html";
+        } catch (error) {
+          alert("Sign up failed! " + error.message);
+        }
+      });
+    </script>
+  </body>
+</html>

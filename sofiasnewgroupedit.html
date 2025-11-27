@@ -1,0 +1,369 @@
+<html>
+  <head>
+    <style>
+      :root {
+        --accent-color: #fff5fa; /* default accent color */
+        --header-font: "Oooh Baby", sans-serif;
+        --body-font: "Inria Serif", sans-serif;
+      }
+
+      body {
+        background-color: #fbf7f8;
+        text-align: center;
+        font-family: var(--header-font);
+        font-size: 30pt;
+      }
+
+      header {
+        background-image: url("../img/lightcoloredbackdrop.png");
+        box-shadow: 0 0 60px rgba(78, 22, 45, 0.3);
+        padding: 2.5rem 0 0.5rem 0;
+      }
+
+      #backarrow {
+        position: absolute;
+        top: 4rem;
+        left: 2rem;
+        z-index: 10;
+        width: 2rem;
+        height: auto;
+      }
+
+      /* bottom navbar */
+      .bottomnav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: var(--accent-color);
+        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+        z-index: 100;
+        padding: 1rem 0;
+      }
+
+      .bottomnav ul {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .bottomnav li {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-family: var(--body-font);
+        font-size: 25pt;
+        color: #362830;
+      }
+
+      .bottomnav img {
+        width: 100px;
+        height: auto;
+        margin-bottom: 0.5rem;
+      }
+
+      /* profile section title */
+      #profilesectiontitle {
+        text-align: left;
+        font-family: var(--body-font);
+        font-size: 36pt;
+        font-weight: bold;
+        margin: 0;
+      }
+
+      /* profile box container */
+      .taskeditcontainer {
+        /* changed to make the background box wider with larger margins */
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        text-align: left;
+        font-family: "Inria Serif", sans-serif;
+        border: 2px solid #4a2b30;
+        border-radius: 30px;
+        background: #fffaf7;
+        box-shadow: 0 20px 50px rgba(78, 22, 45, 0.25);
+      }
+
+      /* headings inside profile box */
+      #mainheadings {
+        font-weight: bold;
+        margin-bottom: 4px;
+        font-size: 37pt;
+        color: #4a2b30;
+      }
+
+      #logoutbutton {
+        display: flex;
+        align-items: flex-start;
+        border: none;
+        border-radius: 23px;
+        font-size: 30pt;
+        text-align: left;
+        font-family: var(--body-font);
+        margin-top: 0.5em;
+        width: 190px;
+        padding: 20px;
+        background-color: #a58a91;
+        color: white;
+      }
+
+      .inputbubble {
+        display: flex;
+        align-items: center;
+        background: #fffdfc;
+        border: 2px solid #e6d9dc;
+        border-radius: 40px;
+        padding: 0 28px;
+        height: 140px; /* height of input boxes */
+        margin-bottom: 0px; /* spacing between boxes */
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14);
+        transition: all 0.25s ease; /* all animations have the same timing (the animation is the border effect) */
+      }
+
+      /* creates the box shadow/border effect on all input boxes */
+      .inputbubble:focus-within {
+        border-color: #b57268;
+        box-shadow: 0 0 44px 10px rgba(181, 114, 104, 0.32);
+        transform: translateY(1px);
+      }
+
+      .inputbubble input {
+        width: 100%; /* important: makes sure that the entire task title is displayed in the input box */
+        border: none;
+        outline: none;
+        font-family: var(--body-font);
+        font-size: 34pt;
+        line-height: 1.4;
+        color: #3a2c34;
+      }
+
+      .inputbubble input::placeholder {
+        color: #9a8a90;
+      }
+
+      .priorityoptions {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 30px;
+      }
+
+      .prioritylevel {
+        border: 1.5px solid #e6d9dc;
+        background: #ffffff;
+        color: #3a2c34;
+        border-radius: 12px;
+        box-shadow: 0 6px 18px rgba(78, 22, 45, 0.12);
+        font-size: 40px;
+        padding: 30px 0;
+        transition: all 0.3s ease;
+      }
+
+      .prioritylevel.inUse {
+        border-color: #c5ffcf;
+        border: 5px solid;
+        background: radial-gradient(
+            300px 300px at 50% -20%,
+            #ffdfe9,
+            transparent 70%
+          ),
+          #ffffff; /* creates the light background gradient seen on the priority buttons */
+        box-shadow: 0 0 0 4px rgba(181, 114, 104, 0.18),
+          0 6px 18px rgba(78, 22, 45, 0.12);
+      }
+
+      #low {
+        color: #2c6b3f;
+        font-family: var(--body-font);
+      }
+      #medium {
+        color: #d3a500;
+        font-family: var(--body-font);
+      }
+      #high {
+        color: #7c2a2a;
+        font-family: var(--body-font);
+      }
+
+      .buttonrow {
+        display: flex;
+        gap: 30px;
+        margin-top: 30px;
+      }
+
+      #save {
+        border: 3px solid rgba(82, 78, 78, 0.678);
+        border-radius: 23px;
+        font-size: 30pt;
+        text-align: center;
+        font-family: var(--body-font);
+        margin-top: 0.5em;
+        width: 190px;
+        padding: 20px;
+        background-color: rgb(224, 255, 224);
+        font-weight: bold;
+        color: inherit;
+      }
+
+      #deletetask {
+        border: 3px solid #7c2a2a;
+        border-radius: 23px;
+        font-size: 30pt;
+        text-align: center;
+        font-family: var(--body-font);
+        margin-top: 0.5em;
+        width: 190px;
+        padding: 20px;
+        background-color: rgb(255, 224, 236);
+        font-weight: bold;
+        color: inherit;
+      }
+    </style>
+
+    <link href="https://fonts.cdnfonts.com/css/oooh-baby" rel="stylesheet" />
+    <link href="https://fonts.cdnfonts.com/css/inria-serif" rel="stylesheet" />
+    <link
+      href="https://fonts.cdnfonts.com/css/cormorant-garamond"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.cdnfonts.com/css/quicksand" rel="stylesheet" />
+  </head>
+
+  <body>
+    <header>
+      <h1 id="mainTitlePage">Write a Group Task</h1>
+      <div id="backarrow" onclick="window.history.back()">
+        <img src="../img/up-arrow.png" width="110px" />
+      </div>
+    </header>
+
+    <!-- PROFILE SETTINGS SECTION -->
+    <div class="taskeditcontainer">
+      <p id="mainheadings">Task Name:</p>
+      <div class="inputbubble">
+        <input type="text" placeholder="Go Hiking At Burnaby Mountain" />
+      </div>
+
+      <p id="mainheadings">Set Date:</p>
+      <div class="inputbubble">
+        <input id="dateoftask" type="date" />
+      </div>
+
+      <p id="mainheadings">Priority:</p>
+      <div class="priorityoptions">
+        <button class="prioritylevel" id="low">Low</button>
+        <button class="prioritylevel" id="medium">Medium</button>
+        <button class="prioritylevel" id="high">High</button>
+      </div>
+
+        <br />
+        <div class="buttonrow">
+          <button id="save">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAVBAR -->
+    <div class="bottomnav">
+      <ul>
+        <li>
+          <a href="friends.html"
+            ><img src="../img/friendsicon.png" alt="Friends"
+          /></a>
+          <span>Friends</span>
+        </li>
+        <li>
+          <a href="sofiascalendar.html"
+            ><img src="../img/scheduleicon.png" alt="Schedule"
+          /></a>
+          <span>Schedule</span>
+        </li>
+      </ul>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+      import { getAuth } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+      import {
+        getFirestore,
+        doc,
+        getDoc,
+        setDoc,
+        deleteDoc,
+        updateDoc,
+      } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyC1X3eQaWxuFZt-Jrrzxl_X7RPzD1ooRd8",
+        authDomain: "calendar-app-eeda4.firebaseapp.com",
+        projectId: "calendar-app-eeda4",
+        storageBucket: "calendar-app-eeda4.firebasestorage.app",
+        messagingSenderId: "135200443171",
+        appId: "1:135200443171:web:d842dc61da8fcae97d5a96",
+        measurementId: "G-B0DBRK6MM2",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      // pulls out the group id from the url string after the ?
+      const urlparams = new URLSearchParams(window.location.search);
+      const groupId = urlparams.get("groupId");
+
+      // finds all of the priority buttons on the page
+      const prioritybuttons = document.querySelectorAll(".prioritylevel");
+      prioritybuttons.forEach((button) => {
+        // when a priority button is clicked
+        button.addEventListener("click", () => {
+          // remove the inUse class from all buttons
+          prioritybuttons.forEach((b) => b.classList.remove("inUse"));
+          // add the inUse class to the clicked button
+          button.classList.add("inUse");
+        });
+      });
+
+      // when the save button is clicked create a new group task
+      document.getElementById("save").onclick = async () => {
+        const tasktitleinput =
+          document.querySelector(".inputbubble input").value; // get the task title from the input box
+        const taskdateinput = document.getElementById("dateoftask").value; // get the task date from the date input box
+
+        if (!taskdateinput || !tasktitleinput) return; // stop if input fields are left empty
+
+        // builds a unique id for the task using date + title
+        const newtaskid = taskdateinput.replaceAll("-", "") + tasktitleinput;
+
+        const taskdocref = doc(db, "groups", groupId, "tasks", newtaskid);
+
+        // finds which priority button is currently in use
+        const selectedprioritybutton = document.querySelector(
+          ".prioritylevel.inUse"
+        );
+
+        // if a button is selected, use its id; otherwise default to medium
+        const chosenpriority = selectedprioritybutton
+          ? selectedprioritybutton.id
+          : "medium";
+
+        // prepares the new task object
+        const newtaskdata = {
+          title: tasktitleinput,
+          dateISO: taskdateinput, // task date in iso format
+          priority: chosenpriority,
+          shared: true, // shows this is a group task
+        };
+        // saves the new task into firestore
+        await setDoc(taskdocref, newtaskdata);
+
+        window.location.href = "sofiascalendar.html"; // redirects back to the calendar page
+      };
+    </script>
+  </body>
+</html>

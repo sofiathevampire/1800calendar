@@ -1,0 +1,584 @@
+<html>
+  <head>
+    <style>
+      :root {
+        --fontcolor: #4e162d;
+        --paper: #ffffff;
+        --timelinespine: #eeeeee;
+        --accent: #fff5fa;
+        --shadow: rgba(78, 22, 45, 0.12);
+        --bubble: #f2d9e6;
+        --urgent: #fbe3eb;
+        --urgent-bubble-color: #f4c9d3;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: #fbf7f8;
+        font-family: "Inria Serif", serif;
+        color: var(--fontcolor);
+      }
+
+
+      header {
+        padding: 1.2rem 1rem 0.6rem 1rem;
+        position: sticky;
+        top: 0;
+        display: flex; /* makes sure everything is stacked vertically and to the left in the top header */
+        flex-direction: column;
+        align-items: flex-start;
+        background: linear-gradient(180deg, #fbf7f8, rgba(251, 247, 248, 0.75));
+        backdrop-filter: blur(6px);
+        z-index: 10;
+        padding: 1rem;
+      }
+
+
+      /* for text text within the top header */
+      .topheading {
+        font-size: 2rem;
+        font-weight: bold;
+      }
+
+      .quote {
+        font-size: 3.8vw;
+        opacity: 0.7;
+        margin-top: 0.2rem;
+      }
+
+      .topheading {
+        font-size: 6.2vw;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+      }
+
+      /* for the weekly timeline */
+      .weeklytimeline {
+        position: relative;
+        margin: 1rem 0 5.5rem 0;
+        padding-left: 16vw;
+        padding-bottom: 8rem; /* IMPORTANT: adds extra padding at the bottom of the timeline so that it's not blocked by the urgent section */
+      }
+
+      /* creates the light gray timeline spine */
+      .weeklytimeline::before {
+        content: "";
+        position: absolute;
+        left: 8vw;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        border-radius: 4px;
+        background: var(--timelinespine);
+      }
+
+      /* gray date bubbles located on the side */
+      .daybubble {
+        position: absolute;
+        left: -15vw; /* please excuse the - value */
+        top: 1.2rem;
+        width: 8vw;
+        height: 8vw;
+        align-items: center;
+        justify-content: center;
+        font-size: 3.6vw;
+        font-weight: 700;
+        color: #362830;
+        border-radius: 50%;
+        background: #eaeaea;
+        box-shadow: 0 2px 6px var(--shadow);
+        display: flex;
+      }
+      /* for each of the weekday cards*/
+      .weekday {
+        position: relative;
+        margin: 1rem 1rem;
+      }
+
+      .weekdaycards {
+        background: var(--paper);
+        border-radius: 18px;
+        box-shadow: 0 8px 26px var(--shadow);
+        overflow: hidden;
+      }
+
+      /* adds a layering/paper stack effect */
+      .weekdaycards::after {
+        content: "";
+        position: absolute;
+        background: rgba(255, 255, 255, 0.7);
+        box-shadow: 0 6px 16px var(--shadow);
+        left: 10px;
+        right: 10px;
+        bottom: -6px;
+        height: 10px;
+        border-radius: 14px;
+        z-index: -1;
+      }
+
+      /* the header section for each weekday*/
+      .daytitleheader {
+        padding: 0.8rem 1rem;
+        background: var(--accent);
+        display: flex;
+        align-items: baseline;
+        gap: 0.6rem;
+      }
+
+      /* the heading for the name of the day */
+      .nameofday {
+        font-size: 4.8vw;
+        font-weight: 700;
+        color: #2a0d18;
+      }
+
+      /* small date displayed beside name of day */
+      .date {
+        font-size: 3.8vw;
+        opacity: 0.7;
+      }
+
+      /* creates a faint gradient on the header for the first weekday */
+      .weekday.today .daytitleheader {
+          background: var(--accent);
+          position: relative;
+      }
+
+      /* creates the task grid */
+      .tasks {
+        padding: 0.8rem 1rem 1rem 1rem;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.6rem;
+      }
+
+      /* bubbles!! (for both the urgent section and for each of the weekdays) */
+      .taskbubble {
+        background: linear-gradient(135deg, var(--bubble), #ffeef7);
+        color: #290a16;
+        padding: 0.6rem 0.8rem;
+        border-radius: 18px;
+        font-size: 3.8vw;
+        box-shadow: 0 2px 6px var(--shadow);
+      }
+
+      .urgentbubble {
+        border-radius: 16px;
+        font-size: 3.6vw;
+        box-shadow: 0 2px 6px var(--shadow);
+        background: var(--urgent-bubble-color);
+        color: #2a0d18;
+        padding: 0.5rem 0.8rem;
+      }
+
+      /* the empty add new task section on thursday */
+      .emptyBubble {
+        border-radius: 14px;
+        font-size: 3.8vw;
+        border: 1px dashed rgba(78, 22, 45, 0.18);
+        grid-column: 1 / -1;
+        background: #faf5f8;
+        color: #7a5a68;
+        padding: 0.7rem 0.9rem;
+        text-align: center;
+      }
+
+      /* styling for the entire urgent section stuck to the bottom of the screen */
+      footer {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 0.9rem 1rem env(safe-area-inset-bottom);
+        background: linear-gradient(
+          180deg,
+          rgba(251, 247, 248, 0.2),
+          #cfa2ad 80% /* responsible for shading in bg */
+        );
+        backdrop-filter: blur(40px); /* size of bg shading */
+      }
+
+      .urgentzone {
+        background: var(--urgent);
+        border-radius: 18px;
+        box-shadow: 0 8px 26px var(--shadow);
+        padding: 0.9rem;
+      }
+
+      .urgentheading {
+        font-size: 4.4vw;
+        font-weight: 700;
+        margin-bottom: 0.6rem;
+      }
+
+      .urgentbubblelist {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+      }
+
+      /* does a cool little wiggle animation when you click on the bubbles :P*/
+      @keyframes wiggle {
+        0%,
+        100% {
+          transform: rotate(0deg);
+        }
+        25% {
+          transform: rotate(9deg);
+        }
+        75% {
+          transform: rotate(-6deg);
+        }
+      }
+
+      .taskbubble:active {
+        animation: wiggle 0.3s ease;
+      }
+
+      /* creates the gradient for the timeline's spine */
+      .weeklytimeline::before {
+        background: linear-gradient(
+          to bottom,
+          rgba(238, 238, 238, 0.8),
+          rgba(70, 69, 69, 0.8)
+        );
+      }
+
+      /* creates the translation effect on the high priority bubbles 
+      when you first load in */
+      @keyframes slideup {
+        from {
+          transform: translateY(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      .urgentbubble {
+        animation: slideup 0.6s ease-out;
+      }
+
+      /* creates the pulsing animation for the urgent section */
+      @keyframes heartbeatpulse {
+        0% {
+          transform: scale(1);
+          box-shadow: 0 0 6px rgba(32, 2, 16, 0.575);
+        }
+        30% {
+          transform: scale(1.05);
+          box-shadow: 0 0 12px rgba(165, 7, 67, 0.76);
+        }
+        60% {
+          transform: scale(1);
+          box-shadow: 0 0 6px rgb(119, 73, 92);
+        }
+        100% {
+          transform: scale(1);
+          box-shadow: 0 0 6px rgb(56, 2, 20);
+        }
+      }
+
+      /* makes it so that the pulse animation only loops 3 times */
+      .urgentzone {
+        animation: heartbeatpulse 2s ease-in-out;
+        animation-iteration-count: 3;
+      }
+
+      @keyframes bubblepop {
+        0% {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        60% {
+          transform: scale(1.05);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      .taskbubble {
+        animation: bubblepop 0.4s ease;
+      }
+
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.cdnfonts.com/css/inria-serif" rel="stylesheet" />
+    <title>Weekly View</title>
+  </head>
+  <body>
+    <header>
+        <div
+          id="backarrow"
+          onclick="window.history.back()"
+        >
+          <img src="../img/up-arrow.png" width="40px" />
+        </div>
+        <div class="topheading">This week</div>
+      </div>
+      <div class="quote">The secret of getting ahead is getting started <br> Mark Twain</div>
+    </header>
+
+    <main class="weeklytimeline">
+      <!-- MONDAY -->
+      <section class="weekday today">
+        <div class="daybubble">Mon</div>
+        <div class="weekdaycards">
+          <div class="daytitleheader">
+            <span class="nameofday">Monday</span>
+            <div class="date">Nov 17</div>
+          </div>
+          <div class="tasks" data-weekday="Monday">
+            <div class="emptyBubble">No tasks yet — add something simple</div>
+            <div class="taskbubble">Buy Cookies</div>
+            <div class="taskbubble">Call Lachesis</div>
+            <div class="taskbubble">Swim Meet @7:00</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TUESDAY -->
+      <section class="weekday">
+        <div class="daybubble">Tue</div>
+        <div class="weekdaycards">
+          <div class="daytitleheader">
+            <span class="nameofday">Tuesday</span>
+            <div class="date">Nov 18</div>
+          </div>
+          <div class="tasks" data-weekday="Tuesday">
+            <div class="emptyBubble">No tasks yet — add something simple</div>
+            <div class="taskbubble">Meet David @ Rocky Point</div>
+            <div class="taskbubble">Work on 1800</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- WEDNESDAY -->
+      <section class="weekday">
+        <div class="daybubble">Wed</div>
+        <div class="weekdaycards">
+          <div class="daytitleheader">
+            <span class="nameofday">Wednesday</span>
+            <div class="date">Nov 19</div>
+          </div>
+          <div class="tasks" data-weekday="Wednesday">
+            <div class="taskbubble">Work on Biz. Analysis ERD</div>
+            <div class="taskbubble">Go Grocery Shopping</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- THURSDAY -->
+      <section class="weekday">
+        <div class="daybubble">Thu</div>
+        <div class="weekdaycards">
+          <div class="daytitleheader">
+            <span class="nameofday">Thursday</span>
+            <div class="date">Nov 20</div>
+          </div>
+          <div class="tasks" data-weekday="Thursday">
+            <div class="taskbubble">Bake Banana Loaf</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FRIDAY -->
+      <section class="weekday">
+        <div class="daybubble">Fri</div>
+        <div class="weekdaycards">
+          <div class="daytitleheader">
+            <span class="nameofday">Friday</span>
+            <div class="date">Nov 21</div>
+          </div>
+          <div class="tasks" data-weekday="Friday">
+            <div class="taskbubble">Bake Banana Loaf</div>
+            <div class="taskbubble">Finish Watching That X-Files Episode</div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- pls don't remove the semantic footer element; it is part of the styling -->
+    <footer>
+      <div class="urgentzone">
+        <div class="urgentheading">High priority</div>
+        <div class="urgentbubblelist">
+          <div class="urgentbubble">Complete Assignment 2 for Java</div>
+          <div class="urgentbubble">Look for Missing Library Book</div>
+          <div class="urgentbubble">PAY RENT</div>
+        </div>
+      </div>
+    </footer>
+
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+  import { getFirestore, getDocs, collection } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+  import { query, where } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyC1X3eQaWxuFZt-Jrrzxl_X7RPzD1ooRd8",
+    authDomain: "calendar-app-eeda4.firebaseapp.com",
+    projectId: "calendar-app-eeda4",
+    storageBucket: "calendar-app-eeda4.appspot.com",
+    messagingSenderId: "135200443171",
+    appId: "1:135200443171:web:d842dc61da8fcae97d5a96",
+    measurementId: "G-B0DBRK6MM2",
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+
+/* --- CONVERTS A DATE INTO A WEEKDAY NAME --- */
+// figures out the weekday name associated with a date
+function getWeekday(taskdate) {
+  var date;
+
+  // if it's a firestore timestamp, convert it to a normal js date
+  if(taskdate && taskdate.toDate) {
+    date = taskdate.toDate();
+  }
+
+  // if it's already a Date object, use it as is
+  else if(taskdate instanceof Date) {
+    date = taskdate;
+  }
+
+  // if it is in the form yyyy-mm-dd, parse it into numbers
+  else if(typeof taskdate === "string" ) {
+    var parts = taskdate.split("-");
+    if(parts.length === 3) {
+      var year = parts[0]; // first part is the year
+      var month = parts[1] - 1; // month (recall they start at index 0)
+      var day = parts[2]; // day
+      date = new Date(year, month, day);
+
+    // if it's none of these, let javascript figure it out
+    } else {
+      date = new Date(taskdate);
+    }
+    }
+
+    var weekdaynames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    return weekdaynames[date.getDay()]; // gets weekday number from the date, uses it as an index to get the weekday name
+  }
+
+  /* --- SHOWS THE TASK ON EACH WEEKDAY BUBBLE  --- */
+  function showTask(task) {
+    var weekday;
+    // if the task already has a firestore ISO date (yyyy-mm-dd) use that
+    if (task.dateISO) {
+      weekday = getWeekday(task.dateISO);
+    } else {
+      weekday = getWeekday(task.date); // otherwise, use the plain date we created above
+    }
+    if (!weekday) { // end the function if it's an invalid date
+      return;
+    }
+
+    // find the task bubble/box that matches this weekday
+    var taskcontainer = document.querySelector('[data-weekday="' + weekday + '"]');
+
+    // create a new bubble to show the task
+    var bubble = document.createElement("div");
+    bubble.className = "taskbubble";
+
+    // put the task title inside of the bubble (unless the user entered a blank title)
+    if (task.title) {
+      bubble.textContent = task.title;
+    } else {
+      bubble.textContent = ""; 
+    }
+    taskcontainer.appendChild(bubble); // add bubble to the weekday box
+  }
+
+
+
+/* --- CLEARS ALL TASK BUBBLES OFF OF THE PAGE --- */
+function clearTasks() {
+  var bubbles = document.querySelectorAll(".taskbubble"); // selects all of the task bubbles on the page
+  for (var i = 0; i < bubbles.length; i++) { // runs a for loop that removes them one by one
+    bubbles[i].remove();
+  }
+}
+
+/* --- LOADS IN AND DISPLAYS NEW TASKS ONLY FOR THE CURRENT WEEK (SEPARATES HIGH-PRIORITY FROM LOW-PRIORITY TASKS) --- */
+async function loadWeeklyTasks(userId) {
+  // uses today's date to figure out the bounds of the current week
+  const today = new Date();
+
+  // creates a copy of today's date and sets it back to sunday of this week
+  /* ex. let's say today is november 21st; then today.getDate() = 21 
+      today.getDay() would give you 5 (because we start counting at index 0 from sunday)
+      21-5 = 16, which represents sunday, november 16th
+  */
+  const startofweek = new Date(today);
+  startofweek.setDate(today.getDate() - today.getDay());
+
+/* copies over sunday's date: november 16th, into endofweek
+    so it becomes 16 + 6 = 22, therefore the end of the week would be saturday, november 22nd
+*/
+  const endofweek = new Date(startofweek);
+  endofweek.setDate(startofweek.getDate() + 6);
+
+  // slices the first 10 characters of the yyyy-mm-dd string to get both dates in this form
+  const startISO = startofweek.toISOString().slice(0, 10);
+  const endISO   = endofweek.toISOString().slice(0, 10);
+
+  // gets all tasks from firestore between the dates of sunday and saturday 
+  const thisweektasks = query(
+    collection(db, "personal-tasks", userId, "tasks"),
+    where("dateISO", ">=", startISO),
+    where("dateISO", "<=", endISO)
+  );
+  const snapshot = await getDocs(thisweektasks);
+
+  // clears out any old task bubbles
+  clearTasks();
+
+
+  // finds and clears any leftover tasks in the high priority bubble section
+  const urgentList = document.querySelector('.urgentbubblelist');
+  if (urgentList) urgentList.innerHTML = '';
+
+  // loops through each of the task docs from Firestore
+  for (let i = 0; i < snapshot.docs.length; i++) {
+    const tasksnapshot = snapshot.docs[i];     
+    const task = tasksnapshot.data();  
+
+    // shows regular tasks in their correct weekly bubble
+    showTask(task);
+
+    // standardizes the priority task value to a lowercase string
+    const priority = (task.priority || '').toString().toLowerCase();
+
+    // if it's high priority, create a new bubble to add to the priority section
+    if (priority === 'high' && urgentList) {
+      const urgentBubble = document.createElement('div'); 
+      urgentBubble.className = 'urgentbubble';
+      urgentBubble.textContent = task.title; // adds the name of the task into the task bubble
+      urgentList.appendChild(urgentBubble);
+    }
+  }
+}
+
+/* --- GETS THE LOGGED IN USER'S TASKS --- */
+function setupWeeklyView() {
+  onAuthStateChanged(auth, function (user) {
+    if (user) {
+      loadWeeklyTasks(user.uid);
+    }
+  });
+}
+
+window.onload = setupWeeklyView;
+   </script>
+  </body>
+</html>
