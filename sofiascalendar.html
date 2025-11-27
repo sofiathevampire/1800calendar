@@ -1,0 +1,482 @@
+<html>
+  <head>
+    <style>
+      :root {
+        --accent-color: #fff5fa; /* default accent color */
+        --header-font: "Oooh Baby", sans-serif;
+        --body-font: "Inria Serif", sans-serif;
+        --monthly-arrow: #aa909d;
+      }
+
+      body {
+        background-color: #fbf7f8;
+        text-align: center;
+        font-family: var(--header-font);
+        font-size: 30pt;
+      }
+
+      header {
+        background-image: url("./img/lightcoloredbackdrop.png");
+        box-shadow: 0 0 60px rgba(78, 22, 45, 0.3);
+        padding: 2.5rem 0 0.5rem 0; /* top right bottom left padding*/
+      }
+
+      #navIcons {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 1rem;
+        padding: 2rem;
+        margin-top: -14rem;
+      }
+
+      #backarrow {
+        position: absolute;
+        top: 4rem;
+        left: 2rem;
+        z-index: 10;
+        width: 2rem;
+        height: auto;
+      }
+
+      #title {
+        margin-top: 2rem;
+        margin-left: 2rem;
+        line-height: 1;
+        text-align: left;
+        font-size: 50pt;
+        color: rgb(54, 40, 48);
+      }
+
+      #subtitle {
+        display: none; /* leaving this hidden because I'm not sure if I want to use it; may delete later */
+        opacity: 0.7;
+        font-size: 18pt;
+        margin-bottom: 20px;
+        font-size: 30pt;
+        text-align: left;
+      }
+
+      #calendarContainer {
+        display: flex;
+        justify-content: center;
+      }
+
+      #calendarDiv {
+        background-color: white;
+        border-radius: 10px;
+        margin: auto;
+        align-content: center;
+        text-align: center;
+      }
+
+      #calendarHeading {
+        display: flex;
+        border-radius: 10px;
+        padding: 1rem;
+        background-color: var(--accent-color);
+        line-height: 0;
+        box-shadow: 0 0 60px rgba(78, 22, 45, 0.3);
+      }
+
+      /* css for the day name to align with the columns of the calendar */
+      #calendarHeading p {
+        width: 4rem;
+        margin: 30px;
+        text-align: center;
+        font-size: 30pt;
+        font-family: var(--body-font);
+      }
+
+      #calendarContent {
+        z-index: 1;
+        padding: 3vw;
+        justify-content: center;
+        border: 2px; /* optional: add a temporary border here (or don't) */
+        font-size: 80pt;
+      }
+      .day {
+        width: 4rem;
+        height: 4rem;
+        margin: 20px; /* controls the size of the white padding surrounding the days */
+        padding: 10px;
+        font-size: 30pt;
+        font-weight: bold;
+        border-radius: 20px;
+        background-color: var(--accent-color);
+        box-shadow: 0 0 30px rgba(78, 22, 45, 0.2);
+      }
+
+      .days {
+        display: flex; /* super important that you don't remove this, controls the entire layout of the calendar days */
+      }
+
+      #collapseButton {
+        z-index: 0;
+        padding-top: 10px;
+        margin-top: -2rem;
+      }
+
+      #collapseButton img {
+        width: 3rem;
+        transition: transform 0.3s ease;
+      }
+
+      #gridbg {
+        z-index: 4;
+      }
+
+      /* this is for the task-list container */
+      .todo-container {
+        background-image: url("../img/gridbackground.png");
+        background-repeat: repeat-y; /* repeats vertically */
+        background-size: cover;
+        background-position: top center;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgb(130, 98, 98);
+        padding: 2rem;
+        position: relative;
+        z-index: 1;
+        min-height: 1000px;
+      }
+
+      /* styles the task list container that holds all the tasks */
+      #taskList {
+        max-width: 80rem;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+        font-size: 40pt;
+        max-width: 100%;
+        /* added a single line to fix overflowing task text; basically clips any text that overflows horizontally */
+        overflow-x: hidden;
+        padding-bottom: 8rem; /* creates space for the final task item so it isn't obstructed by the navbar */
+      }
+
+      /* styles the input box for entering new tasks */
+      input[type="text"] {
+        padding: 2rem; /* increased the size of the task box */
+        font-family: var(--header-font);
+        font-size: 40pt;
+        box-shadow: 0 30px 60px rgba(54, 1, 23, 0.616);
+        border: 2px solid #3615299b;
+        border-radius: 20px;
+        background-color: #f9f9f9;
+        width: 100%;
+        max-width: 80rem;
+        margin-bottom: 3rem;
+        transition: all 0.2s ease;
+      }
+
+      /* css for the placeholder text in the input box */
+      input[type="text"]::placeholder {
+        font-family: var(--header-font);
+        font-size: 40pt;
+        color: #000000;
+        opacity: 0.7;
+        font-weight: bold;
+      }
+
+      /* controls the X button beside each task */
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      /* styles each individual task box */
+      #taskList li {
+        padding: 1rem; /* increased the size of the task box */
+        background: #fffdfcb5;
+        margin-bottom: 3rem;
+        margin: 0 0 30px 0;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border: 1.5px solid rgb(74, 43, 48);
+        white-space: normal; /* added to fix overflowing task text: allows for text wrapping so that the x button is still visible */
+        max-width: 100%;
+        word-break: break-word;
+      }
+
+      /* styles the task after it's been completed; note: the line-through is not currently being used */
+      #taskList li.done {
+        text-decoration: line-through;
+        color: #b5b5b5;
+        background: #f2f2f2;
+        opacity: 0.7;
+      }
+
+      .calendarmenu {
+        position: relative;
+      }
+
+      .calendarmenu:hover .dropdownmenuoptions {
+        display: block;
+      }
+
+      .dropdownmenuoptions {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 100%;
+        z-index: 9999;
+      }
+
+      /* controls the X button beside each task */
+      button {
+        background: none;
+        border: none;
+        font-size: 4rem;
+        color: #b57268;
+      }
+
+      /* styles the note about the maximum number of tasks allowed */
+      .limit-note {
+        font-size: 10rem;
+        color: #b57268;
+        text-align: center;
+      }
+
+      /* styles the bottom navbar */
+      .bottomnav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: var(--accent-color);
+        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+        z-index: 100;
+        padding: 1rem 0;
+      }
+
+      .bottomnav ul {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .bottomnav li {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-family: var(--body-font);
+        font-size: 25pt;
+        color: #362830;
+      }
+
+      .bottomnav img {
+        width: 100px;
+        height: auto;
+        margin-bottom: 0.5rem;
+      }
+
+      /* styles the box containing both menu options */
+      .dropdownmenuoptions {
+        display: none;
+        position: absolute;
+        background-color: #f0f0f0;
+        top: 100px;
+        right: 0;
+        border-radius: 20px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+        padding: 0.5rem;
+      }
+
+      /* styles each of the individual options */
+      .options {
+        background-color: #e6e6e6;
+        padding: 10px 40px;
+        color: #362830;
+        margin: 6px 0;
+        font-family: var(--body-font);
+        transition: background-color 0.2 ease;
+      }
+
+      .options a {
+        text-decoration: none;
+        color: inherit;
+      }
+
+      /* outlines for each task box assigned a priority level */
+      .lowpriority {
+        box-shadow: inset 0 0 6px 4px rgba(171, 255, 171, 0.767);
+        border-radius: 8px;
+        background-color: rgb(226, 255, 226);
+      }
+      .mediumpriority {
+        box-shadow: inset 0 0 6px 4px rgba(219, 201, 4, 0.603);
+        border-radius: 8px;
+        background-color: rgb(247, 246, 205);
+      }
+      .highpriority {
+        box-shadow: inset 0 0 6px 4px rgba(196, 4, 4, 0.63);
+        background-color: rgb(255, 233, 230);
+        border-radius: 8px;
+      }
+
+      /* styles the monthly arrows */
+      #previousarrow,
+      #nextarrow {
+        background: none;
+        border: none;
+        font-size: 4.3rem; /* size */
+        color: var(
+          --monthly-arrow
+        ); /* important that we define the color of the arrow in case the user wants to change it through preferences */
+      }
+    </style>
+    <link href="https://fonts.cdnfonts.com/css/oooh-baby" rel="stylesheet" />
+    <link href="https://fonts.cdnfonts.com/css/inria-serif" rel="stylesheet" />
+  </head>
+  <body>
+    <!-- HEADER AREA -->
+    <header>
+      <h1 id="plannerName">Spencer's Planner</h1>
+      <div id="navIcons">
+        <a href="sofiassettings.html" class="settingsicon"
+          ><img src="../img/settingsgear.png" width="70px"
+        /></a>
+        <div class="calendarmenu">
+          <a href="#" class="calendaricon"
+            ><img src="../img/calendaricon.png" width="70px"
+          /></a>
+          <div class="dropdownmenuoptions">
+            <div class="options">
+              <a href="sofiasnewweeklyview.html">Weekly View</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="backarrow" onclick="window.history.back()">
+        <img src="../img/up-arrow.png" width="110px" />
+      </div>
+    </header>
+
+    <!-- TITLE AND SUBTITLE -->
+    <h1 id="title">
+      <button id="previousarrow">◀</button>
+      <!-- (tried to use a material icon
+      here, but I have no idea how to change its size within the button) -->
+      <span id="mainmonthlabel"></span>
+      <button id="nextarrow">▶</button>
+    </h1>
+
+    <!-- CALENDAR AREA -->
+    <div id="calendarContainer">
+      <div id="calendarDiv">
+        <div id="calendarHeading">
+          <p id="dayTitle"><b>Sun</b></p>
+          <p id="dayTitle"><b>Mon</b></p>
+          <p id="dayTitle"><b>Tue</b></p>
+          <p id="dayTitle"><b>Wed</b></p>
+          <p id="dayTitle"><b>Thu</b></p>
+          <p id="dayTitle"><b>Fri</b></p>
+          <p id="dayTitle"><b>Sat</b></p>
+        </div>
+
+        <div id="calendarContent">
+          <div id="tracker">
+            <div class="days">
+              <div class="day">1</div>
+              <div class="day">1</div>
+              <div class="day">1</div>
+              <div class="day">1</div>
+              <div class="day">1</div>
+              <div class="day">1</div>
+              <div class="day">1</div>
+            </div>
+
+            <div class="days">
+              <div class="day">1</div>
+              <div class="day">1</div>
+              <div class="day">1</div>
+              <div class="day">1</div>
+              <div class="day">1</div>
+              <div class="day">1</div>
+              <div class="day">1</div>
+            </div>
+
+            <div class="days">
+              <div class="day">1</div>
+              <div class="day">1</div>
+              <div class="day">1</div>
+              <div class="day">1</div>
+              <div class="day">1</div>
+              <div class="day">1</div>
+              <div class="day">1</div>
+            </div>
+
+            <div class="days">
+              <div class="day">1</div>
+              <div class="day">1</div>
+              <div class="day">1</div>
+              <div class="day">1</div>
+              <div class="day">1</div>
+              <div class="day">1</div>
+              <div class="day">1</div>
+            </div>
+
+            <div class="days">
+              <div class="day">1</div>
+              <div class="day">1</div>
+              <div class="day">1</div>
+              <div class="day">1</div>
+              <div class="day">1</div>
+              <div class="day">1</div>
+              <div class="day">1</div>
+            </div>
+
+            <div class="days">
+              <div class="day">1</div>
+              <div class="day">1</div>
+              <div class="day">1</div>
+              <div class="day">1</div>
+              <div class="day">1</div>
+              <div class="day">1</div>
+              <div class="day">1</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="collapseButton">
+      <img src="uparrow.png" />
+    </div>
+
+    <!-- TASK + GRID SECTION -->
+    <div class="todo-container">
+      <input id="taskInput" type="text" placeholder="Add new task..." />
+      <ul id="taskList"></ul>
+      <div id="note" style="display: none">
+        Max 20 tasks for now, take it easy!
+      </div>
+
+      <div id="tasksByCategory"></div>
+    </div>
+
+    <!-- BOTTOM NAVBAR -->
+    <div class="bottomnav">
+      <ul>
+        <li>
+          <a href="friends.html"
+            ><img src="../img/friendsicon.png" alt="Friends"
+          /></a>
+          <span>Friends</span>
+        </li>
+        <li>
+          <a href="sofiascalendar.html"
+            ><img src="../img/scheduleicon.png" alt="Schedule"
+          /></a>
+          <span>Schedule</span>
+        </li>
+      </ul>
+    </div>
+
+    <script type="module" src="scripts/maincalendar.js"></script>
+  </body>
+</html>

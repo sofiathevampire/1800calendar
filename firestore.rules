@@ -1,0 +1,47 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // users
+    match /users/{userId} {
+      // any signed-in user can read user docs
+      allow read: if request.auth != null;
+
+      // only owners can create their own user doc
+      allow create: if request.auth != null && request.auth.uid == userId;
+
+      // only the owner can update or delete their own user doc
+      allow update, delete: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // friendships
+    match /friendships/{friendshipId} {
+      // any signed-in user can read or write friendship docs
+      allow read, write: if request.auth != null;
+    }
+
+    // personal tasks
+    match /personal-tasks/{userId}/tasks/{taskId} {
+      // only the owner can read or write their own tasks
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // preferences
+    match /preferences/{userId} {
+      
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // groups
+    match /groups/{groupId} {
+      // any signed-in user can read or write groups
+      allow read, write: if request.auth != null;
+    }
+
+    // group tasks
+    match /groups/{groupId}/tasks/{taskId} {
+      // any signed-in user can read or write group tasks
+      allow read, write: if request.auth != null;
+    }
+  }
+}
