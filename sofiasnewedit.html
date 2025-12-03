@@ -225,14 +225,34 @@
         color: inherit;
       }
     </style>
-
+  <!-- MADE MORE CHANGES HERE!! ADDED IN ALL THE FONT IMPORTS -->
+    <link href="https://fonts.cdnfonts.com/css/quicksand" rel="stylesheet" />
     <link href="https://fonts.cdnfonts.com/css/oooh-baby" rel="stylesheet" />
     <link href="https://fonts.cdnfonts.com/css/inria-serif" rel="stylesheet" />
-    <link
+        <link
       href="https://fonts.cdnfonts.com/css/cormorant-garamond"
       rel="stylesheet"
     />
-    <link href="https://fonts.cdnfonts.com/css/quicksand" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Delius&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poiret+One&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fuzzy+Bubbles:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Emilys+Candy&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&display=swap"
+      rel="stylesheet"
+    />
   </head>
 
   <body>
@@ -305,7 +325,7 @@
       }
 
       import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-      import { getAuth } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+      import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
       import {
         getFirestore,
         doc,
@@ -393,8 +413,13 @@
           const updatedtask = {
             title: newtaskname,
             dateISO: newdate,
-            priority: chosenprioritylevel,
           };
+
+          // NEW CHANGE HERE: SET THE DEFAULT PRIORITY TO NULL
+          // only add a new priority if it's actually defined
+          if(chosenprioritylevel !== undefined && chosenprioritylevel !== null) {
+            updatedtask.priority = chosenprioritylevel;
+          }
 
           // saves the newly updated task to firestore
           if (newtaskid === taskId) {
@@ -424,6 +449,32 @@
           await deleteDoc(taskRef);
           window.location.href = "sofiascalendar.html";
         });
+
+// MORE CHANGES AGAIN!! ALL FOR THE FONT & ACCENT COLOR (ALL OF THIS CODE REPEATS ON OTHER PAGES)
+    onAuthStateChanged(auth, async (user) => {
+  if (!user) return;
+  const userdocref = doc(db, "users", user.uid);
+  const userdoc = await getDoc(userdocref);
+
+  if (userdoc.exists()) {
+    const data = userdoc.data();
+
+    if (data.headerFont) {
+      document.documentElement.style.setProperty("--header-font", data.headerFont);
+    }
+
+    if (data.accentColor) {
+      document.documentElement.style.setProperty("--accent-color", data.accentColor);
+
+      const header = document.querySelector("header");
+      if (header) {
+        header.style.backgroundImage = "none";
+        header.style.backgroundColor = data.accentColor;
+      }
+    }
+  }
+});
+
     </script>
   </body>
 </html>

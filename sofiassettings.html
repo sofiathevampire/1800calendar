@@ -229,6 +229,27 @@
         font-family: "Oooh Baby", sans-serif;
         font-size: 28pt;
       }
+      /* STYLED ALL OF THE OTHER NEW FONT OPTION BUTTONS */
+
+      #fontOptionFour {
+        font-family: "Delius", sans-serif;
+        font-size: 28pt;
+      }
+
+      #fontOptionFive {
+        font-family: "Fuzzy Bubbles", sans-serif;
+        font-size: 28pt;
+      }
+
+      #fontOptionSix {
+        font-family: "Emilys Candy", sans-serif;
+        font-size: 28pt;
+      }
+
+      #fontOptionSeven {
+        font-family: "DynaPuff", sans-serif;
+        font-size: 28pt;
+      }
 
       .profilepicwrapper {
         display: flex;
@@ -288,13 +309,34 @@
         box-shadow: 0 4px 20px rgba(78, 22, 45, 0.25);
       }
     </style>
+    <!-- MORE CHANGES MADE HERE!! ADDED ALL THE FONT IMPORTS -->
     <link href="https://fonts.cdnfonts.com/css/oooh-baby" rel="stylesheet" />
     <link href="https://fonts.cdnfonts.com/css/inria-serif" rel="stylesheet" />
     <link
       href="https://fonts.cdnfonts.com/css/cormorant-garamond"
       rel="stylesheet"
     />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Delius&display=swap"
+      rel="stylesheet"
+    />
     <link href="https://fonts.cdnfonts.com/css/quicksand" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poiret+One&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fuzzy+Bubbles:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Emilys+Candy&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&display=swap"
+      rel="stylesheet"
+    />
   </head>
 
   <body>
@@ -309,11 +351,11 @@
     <div class="profilepicwrapper">
       <img id="profilePic" src="./img/defaultprofile.png" />
       <div class="pictext">
-        <label for="newpicinput">Add Imgur Link:</label>
+        <label for="newpicinput">Paste Dropbox link here</label>
         <input
           type="text"
           id="newpicinput"
-          placeholder="https://i.imgur.com/..."
+          placeholder="https://www.dropbox.com/..."
         />
         <br />
         <button id="savepic">Save</button>
@@ -361,6 +403,10 @@
         </div>
         <button class="fontbutton" id="fontOptionOne">Fancy</button>
         <button class="fontbutton" id="fontOptionTwo">Mono</button>
+        <button class="fontbutton" id="fontOptionFour">Delius</button>
+        <button class="fontbutton" id="fontOptionFive">Fuzzy</button>
+        <button class="fontbutton" id="fontOptionSix">Candy</button>
+        <button class="fontbutton" id="fontOptionSeven">Pop</button>
         <button class="fontbutton" id="fontOptionThree">Default</button>
       </div>
     </div>
@@ -390,38 +436,146 @@
       } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
       import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 
-      onAuthStateChanged(auth, async (signedinuser) => {
-        if (signedinuser) {
-          // points to the current user's doc
-          const userdocref = doc(db, "users", signedinuser.uid);
+      // MORE CHANGES MADE HERE!! (SWITCHED TO DROPBOX BC IT WAS MORE CONVENIENT ON MOBILE, ADDED ACCENT AND HEADER COLORS)
+      onAuthStateChanged(auth, async (user) => {
+        if (!user) return;
 
-          // loads all of the user's data from firestore
-          const userdoc = await getDoc(userdocref);
+        const userdocref = doc(db, "users", user.uid);
+        const userdoc = await getDoc(userdocref);
 
-          // if the user doc exists and has a profile picture saved, show it on the page
-          if (userdoc.exists() && userdoc.data().profilePic) {
-            document.getElementById("profilePic").src =
-              userdoc.data().profilePic;
+        if (userdoc.exists()) {
+          const data = userdoc.data();
+
+          // PROFILE PICTURE
+          if (data.profilePic) {
+            document.getElementById("profilePic").src = data.profilePic;
           }
 
-          // when the save button is clicked, update the profile picture
-          document
-            .getElementById("savepic")
-            .addEventListener("click", async () => {
-              const newpicinput = document
-                .getElementById("newpicinput")
-                .value.trim(); // get the new picture url from input
+          // FONTS
+          if (data.headerFont) {
+            document.documentElement.style.setProperty(
+              "--header-font",
+              data.headerFont
+            );
+          }
 
-              if (newpicinput) {
-                // save the new picture url to firestore
-                await updateDoc(userdocref, { profilePic: newpicinput });
+          // ACCENT COLOR
+          if (data.accentColor) {
+            document.documentElement.style.setProperty(
+              "--accent-color",
+              data.accentColor
+            );
+          }
+        }
 
-                // update the picture on the page
-                document.getElementById("profilePic").src = newpicinput;
-
-                alert("profile picture updated!"); // msg for the user
+        // SAVE BUTTON FOR THE PFP
+        const savePicBtn = document.getElementById("savepic");
+        if (savePicBtn) {
+          savePicBtn.addEventListener("click", async () => {
+            let newpicinput = document
+              .getElementById("newpicinput")
+              .value.trim();
+            if (newpicinput) {
+              if (newpicinput.includes("dropbox.com")) {
+                newpicinput = newpicinput.replace("dl=0", "raw=1");
               }
+              await updateDoc(userdocref, { profilePic: newpicinput });
+              document.getElementById("profilePic").src = newpicinput;
+              alert("profile picture updated!");
+            }
+          });
+        }
+
+        // FONT BUTTONS
+        async function setFontChoice(variableName, fieldName, fontFamily) {
+          document.documentElement.style.setProperty(variableName, fontFamily);
+          await updateDoc(userdocref, { [fieldName]: fontFamily });
+        }
+
+        const fontmappings = [
+          {
+            id: "fontOptionOne",
+            variable: "--header-font",
+            field: "headerFont",
+            value: '"Cormorant Garamond", sans-serif',
+          },
+          {
+            id: "fontOptionTwo",
+            variable: "--header-font",
+            field: "headerFont",
+            value: '"Quicksand Book", sans-serif',
+          },
+          {
+            id: "fontOptionThree",
+            variable: "--header-font",
+            field: "headerFont",
+            value: '"Oooh Baby", sans-serif',
+          },
+          {
+            id: "fontOptionFour",
+            variable: "--header-font",
+            field: "headerFont",
+            value: '"Delius", sans-serif',
+          },
+          {
+            id: "fontOptionFive",
+            variable: "--header-font",
+            field: "headerFont",
+            value: '"Fuzzy Bubbles", sans-serif',
+          },
+          {
+            id: "fontOptionSix",
+            variable: "--header-font",
+            field: "headerFont",
+            value: '"Emilys Candy", sans-serif',
+          },
+          {
+            id: "fontOptionSeven",
+            variable: "--header-font",
+            field: "headerFont",
+            value: '"DynaPuff", sans-serif',
+          },
+        ];
+
+        fontmappings.forEach(({ id, variable, field, value }) => {
+          const button = document.getElementById(id);
+          if (button) {
+            button.addEventListener("click", () =>
+              setFontChoice(variable, field, value)
+            );
+          }
+        });
+
+        // FOR SETTING THE CUSTOM ACCENT COLOR
+        const accentPicker = document.getElementById("accentColor");
+        const restorebutton = document.getElementById("restoreColor");
+
+        if (accentPicker) {
+          accentPicker.addEventListener("input", async (e) => {
+            const newColor = e.target.value;
+            document.documentElement.style.setProperty(
+              "--accent-color",
+              newColor
+            );
+            await updateDoc(userdocref, {
+              accentColor: newColor,
+              useSolidHeader: true,
             });
+          });
+        }
+
+        if (restorebutton) {
+          restorebutton.addEventListener("click", async () => {
+            const defaultColor = "#fff5fa";
+            document.documentElement.style.setProperty(
+              "--accent-color",
+              defaultColor
+            );
+            await updateDoc(userdocref, {
+              accentColor: defaultColor,
+              useSolidHeader: false,
+            });
+          });
         }
       });
     </script>

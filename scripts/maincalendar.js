@@ -120,13 +120,29 @@ function createTask(taskId, taskinfo, tasklocation = null) {
   deletebutton.textContent = "X";
   taskItem.appendChild(deletebutton);
 
-  // when the delete button is clicked:
-  deletebutton.onclick = async () => {
-    // remove the task from firestore (if it exists in the database)
-    if (tasklocation) {
-      await deleteDoc(tasklocation);
+  async function completeAndDeleteTask(taskRef) {
+    const taskSnap = await getDoc(taskRef);
+    if (taskSnap.exists()) {
+      const taskData = taskSnap.data();
+      const completedRef = doc(
+        taskRef.parent.parent,
+        "completedTasks",
+        taskRef.id
+      );
+      await setDoc(completedRef, {
+        ...taskData,
+        done: true,
+        completedAt: new Date(),
+        completedBy: auth.currentUser.uid,
+      });
+    }
+    await deleteDoc(taskRef);
+  }
 
-      // otherwise, build the location in firestore using user id and task id, then remove it
+  // CHANGES MADE HERE TO ACCOMODATE THE NEW FEATURE (FOR COMPLETED GROUP TASKS)
+  deletebutton.onclick = async () => {
+    if (tasklocation) {
+      await completeAndDeleteTask(tasklocation);
     } else if (USERS_CURRENT_ID) {
       const taskRef = doc(
         db,
@@ -135,18 +151,15 @@ function createTask(taskId, taskinfo, tasklocation = null) {
         "tasks",
         taskId
       );
-      await deleteDoc(taskRef);
+      await completeAndDeleteTask(taskRef);
     }
 
-    // increments the # of tasks completed
+    // increment user’s completed counter
     if (USERS_CURRENT_ID) {
       const currentuserdoc = doc(db, "users", USERS_CURRENT_ID);
-      await updateDoc(currentuserdoc, {
-        tasksCompleted: increment(1),
-      });
+      await updateDoc(currentuserdoc, { tasksCompleted: increment(1) });
     }
 
-    // removes the item from the list, updates the task limit note
     taskItem.remove();
     updateNote();
   };
@@ -264,7 +277,7 @@ function addNewTask(taskTitle) {
   const taskId = makeUniqueDocId(currentday, taskTitle);
 
   // main info about the task (priority level left empty until set by the user)
-  const taskinfo = { title: taskTitle, priority: "" };
+  const taskinfo = { title: taskTitle, priority: null }; // ANOTHER CHANGE MADE HERE: SET DEFAULT PRIORITY TO NULL
 
   // if the user is logged in, point to where the task will be saved in firestore
   const tasklocation = USERS_CURRENT_ID
@@ -284,6 +297,7 @@ function addNewTask(taskTitle) {
       title: taskTitle, // task name
       createdAt: new Date(), // creation date
       done: false, // false by default, assume task is incomplete
+      priority: null,
     });
   }
 }
@@ -411,36 +425,44 @@ function createCalendar(dateObj) {
 }
 
 /* --- COLLAPSIBLE CALENDAR --- */
+// NEW CHANGES MADE HERE (I THINK KIAN FIXED IT THOUGH)
+// originally, I was checking the style of the first week row to decide if the calendar was collapsed;
+// what I noticed at the start of this month was that the first row was still visible
+// even when the calendar was collapsed, so my logic was flawed
+
+//  we're using a variable to track the state of the calendar instead
+let isCollapsed = false;
+
 function collapsecalendar() {
   collapseButton.addEventListener("click", function () {
-    // figures out the # of week rows in the calendar
+    // grabs all the week rows in the calendar grid
     const allWeekRows = calendarContainer.getElementsByClassName("days");
-    // figures out the day, month, and year of the date currently selected
+
+    // figures out the year, month, and day currently selected
     const currentYear = selecteddate.getFullYear();
     const currentMonth = selecteddate.getMonth();
     const currentDate = selecteddate.getDate();
 
-    //finds out which weekday the 1st of the month is on
+    // finds which weekday the 1st of the month falls on
     const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
 
-    // calculates which week row today belongs to
+    // calculates which week row the current day belongs to
     const currentWeek = Math.floor((currentDate + firstDayOfMonth - 1) / 7);
 
-    // checks if the calendar is already collapsed
-    const isCollapsed = allWeekRows[0].style.display === "none";
+    isCollapsed = !isCollapsed;
 
-    // loops through each week row
+    // instead of checking the first row’s style, it relies on the variable flag
     for (let i = 0; i < allWeekRows.length; i++) {
-      // if the calendar is collapsed, show all the rows using flex
-      if (isCollapsed || i === currentWeek) {
+      if (!isCollapsed) {
+        // shows all of the weeks by default
         allWeekRows[i].style.display = "flex";
-        // otherwise, hide the rows
       } else {
-        allWeekRows[i].style.display = "none";
+        // only shows the week of the current row when collapsed
+        allWeekRows[i].style.display = i === currentWeek ? "flex" : "none";
       }
     }
 
-    // rotates arrow 180deg if the calendar is collapsed, and 0deg otherwise
+    // rotates the arrow based on whether it's collapsed or not
     const arrow = document.querySelector("#collapseButton img");
     if (arrow) {
       arrow.style.transform = isCollapsed ? "rotate(180deg)" : "rotate(0deg)";
@@ -508,18 +530,53 @@ window.onload = function () {
   };
 };
 
-/* --- USER AUTHENTICATION FEATURES --- */
-onAuthStateChanged(auth, function (User) {
-  // if the user is logged in, save their id, display the right planner name, and load in their tasks
-  if (User) {
-    USERS_CURRENT_ID = User.uid;
-    displayPlannerName(USERS_CURRENT_ID);
-    loadTasksForTheDay(formatDate(selecteddate));
-    // otherwise, clear the user's id, clear the task list, set the default planner name, and reset the task limit
-  } else {
+/* --- NEW FEATURES ADDED: CUSTOMIZABLE COLORS & MORE --- */
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
     USERS_CURRENT_ID = null;
     document.getElementById("plannerName").textContent = "My Planner";
     taskList.innerHTML = "";
     updateNote();
+    return;
+  }
+
+  USERS_CURRENT_ID = user.uid;
+
+  // show planner name and load tasks
+  displayPlannerName(USERS_CURRENT_ID);
+  loadTasksForTheDay(formatDate(selecteddate));
+
+  const userdocref = doc(db, "users", user.uid);
+  const userdoc = await getDoc(userdocref);
+  if (!userdoc.exists()) return;
+
+  const data = userdoc.data();
+
+  // apply header font
+  if (data.headerFont) {
+    document.documentElement.style.setProperty(
+      "--header-font",
+      data.headerFont
+    );
+  }
+
+  // apply the accent color absolutely everywhere
+  if (data.accentColor) {
+    document.documentElement.style.setProperty(
+      "--accent-color",
+      data.accentColor
+    );
+  }
+
+  // for removing the header bg and setting it to the custom color
+  const header = document.querySelector("header");
+  if (header) {
+    if (data.useSolidHeader) {
+      header.style.backgroundImage = "none";
+      header.style.backgroundColor = data.accentColor || "var(--accent-color)";
+    } else {
+      header.style.backgroundImage = "url('./img/lightcoloredbackdrop.png')";
+      header.style.backgroundColor = "";
+    }
   }
 });

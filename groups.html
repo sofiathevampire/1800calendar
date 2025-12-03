@@ -57,24 +57,20 @@
         margin: 3rem 0;
       }
 
+      /** NEW CHANGE: FIXED THE STYLING FOR THE FRIENDS BUTTON (REMOVED ACCIDENTAL DUPLICATES + TIED IN TO THE ACCENT COLOR)*/
       /* styles each individual friends button */
       .friendsbutton {
         padding: 0.8rem 0.9rem;
         font-size: 29pt;
         font-family: var(--body-font, sans-serif);
-        background-color: #e0d6dc;
+        background-color: var(--top-button-color);
         border: none;
         border-radius: 8px;
         letter-spacing: -1px;
-      }
-
-      /* styles friend & group buttons */
-      .friendsbutton {
         padding: 1.4rem 1.8rem;
         font-size: 31pt;
         border: 2px solid #d2c2cb;
         border-radius: 18px;
-        background: #fff5fa;
         box-shadow: 0 6px 14px rgba(78, 2, 34, 0.726);
       }
 
@@ -350,8 +346,34 @@
         border-radius: 50px;
       }
     </style>
+    <!-- RECENTLY ADDDED IN ALL OF THE NEW FONT IMPORTS -->
     <link href="https://fonts.cdnfonts.com/css/oooh-baby" rel="stylesheet" />
     <link href="https://fonts.cdnfonts.com/css/inria-serif" rel="stylesheet" />
+    <link
+      href="https://fonts.cdnfonts.com/css/cormorant-garamond"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Delius&display=swap"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.cdnfonts.com/css/quicksand" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poiret+One&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fuzzy+Bubbles:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Emilys+Candy&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&display=swap"
+      rel="stylesheet"
+    />
   </head>
 
   <body>
@@ -715,7 +737,7 @@
         coverimgInput.type = "text";
         coverimgInput.id = "groupCoverInput";
         coverimgInput.placeholder =
-          "Paste an Imgur Link! ex. https://i.imgur.com/...";
+          "Paste a Dropbox link (ex. https://www.dropbox.com/... ?dl=0)";
         coverimgInputBox.appendChild(coverimgInput);
         innercontainer.appendChild(coverimgInputBox);
 
@@ -815,18 +837,21 @@
 
         // SAVES THE NEWLY CREATED GROUP
         savebutton.addEventListener("click", async () => {
-          // gets the group name text, removes whitespace to avoid errors when using the searchbar
           const groupname = document
             .getElementById("groupnameInput")
             .value.trim();
-
-          const coverPhoto = document
+          let coverPhoto = document
             .getElementById("groupCoverInput")
             .value.trim();
 
           if (!groupname) {
             alert("Sorry! You have to enter a group name");
             return;
+          }
+
+          // for normalizing the dropbox link
+          if (coverPhoto.includes("dropbox.com")) {
+            coverPhoto = coverPhoto.replace("dl=0", "raw=1");
           }
 
           // the logged-in user
@@ -893,6 +918,51 @@
           });
         });
       }
+
+      // NEW CHANGE FOR UPDATING THE ACCENT COLORS & MORE
+      onAuthStateChanged(auth, async (user) => {
+        if (!user) return;
+
+        const userdocref = doc(db, "users", user.uid);
+        const userdoc = await getDoc(userdocref);
+        if (!userdoc.exists()) return;
+
+        const data = userdoc.data();
+
+        if (data.accentColor) {
+          document.documentElement.style.setProperty(
+            "--accent-color",
+            data.accentColor
+          );
+
+          document.documentElement.style.setProperty(
+            "--top-button-color",
+            data.accentColor
+          );
+        }
+
+        const header = document.querySelector("header");
+        if (header) {
+          if (data.useSolidHeader) {
+            header.style.backgroundImage = "none";
+            header.style.backgroundColor =
+              data.accentColor || "var(--accent-color)";
+          } else {
+            header.style.backgroundImage =
+              "url('./img/lightcoloredbackdrop.png')";
+            header.style.backgroundColor = "";
+          }
+        }
+
+        if (data.headerFont) {
+          document.documentElement.style.setProperty(
+            "--header-font",
+            data.headerFont
+          );
+        }
+
+        loadGroups(user);
+      });
     </script>
   </body>
 </html>

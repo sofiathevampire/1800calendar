@@ -1,57 +1,60 @@
 <html>
   <head>
     <style>
-      :root {
-        --accent-color: #fff5fa; /* default accent color */
-        --header-font: "Oooh Baby", sans-serif;
-        --body-font: "Inria Serif", sans-serif;
-      }
+  :root {
+     --accent-color: #fff5fa; /* default accent color */
+     --header-font: "Oooh Baby", sans-serif;
+     --body-font: "Inria Serif", sans-serif;
+     --border-color: #d2c2cb;
+     --text-accent: #4e162d;
+     --second-accent-color: #f0cfe0;
+     --shadow-color: rgba(78, 22, 45, 0.12);
+}
 
-      body {
-        background-color: #fbf7f8;
-        background-blend-mode: lighten;
-        text-align: center;
-        font-family: var(--header-font);
-        font-size: 30pt;
-      }
+ body {
+     background-color: #fbf7f8;
+     background-blend-mode: lighten;
+     text-align: center;
+     font-family: var(--header-font);
+     font-size: 30pt;
+}
 
-      header {
-        background-image: url("./img/lightcoloredbackdrop.png");
-        box-shadow: 0 0 60px rgba(78, 22, 45, 0.3);
-        padding: 2.5rem 0 0.5rem 0; /* top right bottom left padding*/
-      }
+ header {
+     background-image: url("./img/lightcoloredbackdrop.png");
+     box-shadow: 0 0 60px rgba(78, 22, 45, 0.3);
+     padding: 2.5rem 0 0.5rem 0;
+    /* top right bottom left padding*/
+}
 
-      #backarrow {
-        position: absolute;
-        top: 4rem;
-        left: 2rem;
-        z-index: 10;
-        width: 2rem;
-        height: auto;
-      }
+ #backarrow {
+     position: absolute;
+     top: 4rem;
+     left: 2rem;
+     z-index: 10;
+     width: 2rem;
+     height: auto;
+}
+/* styles the settings icon in the header;
+ Unfortunately, I had to use position: absolute to prevent the header from overflowing (note: the settings icon is styled using flexbox on the other pages) */
+ .settingsIcon {
+     position: absolute;
+     top: 3.8rem;
+     right: 2.5rem;
+     z-index: 10;
+}
+ a {
+     text-decoration: none;
+     color: inherit;
+}
+/* styles the group of two buttons located at the top of the friends page */
+ .socialbuttonsgroup {
+     display: flex;
+     justify-content: center;
+     gap: 1.5rem;
+     margin: 3rem 0;
+}
 
-      /* styles the settings icon in the header; Unfortunately, I had to use position: absolute to prevent the header from overflowing (note: the settings icon is styled using flexbox on the other pages)  */
-      .settingsIcon {
-        position: absolute;
-        top: 3.8rem;
-        right: 2.5rem;
-        z-index: 10;
-      }
-
-      a {
-        text-decoration: none;
-        color: inherit;
-      }
-
-      /* styles the group of two buttons located at the top of the friends page */
-      .socialbuttonsgroup {
-        display: flex;
-        justify-content: center;
-        gap: 1.5rem;
-        margin: 3rem 0;
-      }
-
-      /* styles each individual friends button */
+  /* NEW CHANGE: COPY PASTED STRAIGHT FROM THE GROUPS PAGE TO FIX DUPLICATE BUTTON STYLING & ADD ACCENT COLOR */
       .friendsbutton {
         padding: 0.8rem 0.9rem;
         font-size: 29pt;
@@ -60,225 +63,296 @@
         border: none;
         border-radius: 8px;
         letter-spacing: -1px;
-      }
-
-      /* styles friend & group buttons */
-      .friendsbutton {
         padding: 1.4rem 1.8rem;
         font-size: 31pt;
         border: 2px solid #d2c2cb;
         border-radius: 18px;
-        background: #fff5fa;
         box-shadow: 0 6px 14px rgba(78, 2, 34, 0.726);
       }
+/* styles the container for the search bar */
+ .searchbarcontainer {
+     display: flex;
+     justify-content: center;
+     margin-top: 1rem;
+}
+ .searchbar {
+     width: 100%;
+     max-width: 800px;
+     padding: 1rem 2rem 0.6rem 5rem;
+    /* some of this padding is responsible for maintaining the distance between the icon and the placeholder text */
+     font-size: 29pt;
+     background-color: #fdf9fb;
+     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+     outline: none;
+     font-family: var(--body-font, sans-serif);
+     border: 2px solid #d2c2cb;
+     border-radius: 25px;
+     background-image: url("./img/searchicon.png");
+    /* sets the icon as a bg image in order to display it (I didn't feel like creating another wrapper div to do this) */
+     background-repeat: no-repeat;
+     background-size: 60px 60px;
+     background-position: 0.8rem center;
+}
+ .friendscontainer {
+     display: flex;
+     flex-direction: column;
+     gap: 4rem;
+     margin: 2rem auto;
+     width: 90%;
+     max-width: 800px;
+     padding-bottom: 8rem;
+    /* added to prevent obstruction from navbar */
+}
+ .friendbox {
+     position: relative;
+     border: 2px solid #d2c2cb;
+     border-radius: 24px;
+     background: #fff;
+     padding: 1.8rem;
+     box-shadow: 0 6px 14px rgba(78, 22, 45, 0.12);
+     margin: 0.5rem 0;
+}
+/* styles the unfriend icon */
+ .unfriend {
+     position: absolute;
+     top: 1rem;
+     right: 1.5rem;
+     width: 67px;
+     height: 67px;
+}
+/* styles the add friend to group icon directly across */
+ .addToGroup {
+     position: absolute;
+     top: 1rem;
+     left: 1.5rem;
+     width: 67px;
+     height: 67px;
+}
+ .profilepic {
+     width: 143px;
+     height: 143px;
+     border-radius: 50%;
+     border: 3px solid #f0cfe0;
+     object-fit: cover;
+     margin-right: 1.2rem;
+}
+ .friendname {
+     font-size: 43pt;
+     font-weight: bold;
+}
+ .friendusername {
+     font-size: 50pt;
+}
+ .leaderboardtasks {
+     margin-top: 10px;
+     font-size: 25pt;
+     font-weight: 600;
+     color: #4e162d;
+     border-radius: 16px;
+     border: 2px solid #d2c2cb;
+     font-family: var(--body-font, sans-serif);
+     background: var(--accent-color);
+     display: inline-block;
+    /* crucial to prevent the button from stretching to its full width */
+     padding: 1rem 1.5rem;
+}
+/* styles the bottom navbar */
+ .bottomnav {
+     position: fixed;
+     bottom: 0;
+     left: 0;
+     width: 100%;
+     background-color: var(--accent-color);
+     box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+     z-index: 100;
+     padding: 1rem 0;
+}
+ .bottomnav ul {
+     display: flex;
+     justify-content: space-around;
+     align-items: center;
+     margin: 0;
+     padding: 0;
+     list-style: none;
+}
+ .bottomnav li {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     font-family: var(--body-font);
+     font-size: 25pt;
+     color: #362830;
+}
+ .bottomnav img {
+     width: 100px;
+     height: auto;
+     margin-bottom: 0.5rem;
+}
+ .addfriendbutton {
+     font-family: var(--body-font);
+     font-size: 24pt;
+     padding: 0.8rem 1.6rem;
+     border-radius: 25px;
+     background-color: var(--accent-color);
+     color: #362830;
+     border: none;
+     box-shadow: 0 4px 20px rgba(78, 22, 45, 0.2);
+     margin-top: 1rem;
+     display: inline-block;
+}
+/*  NEW CHANGES FROM THIS SECTION ONWARDS IN THE CSS: A BUNCH OF STUFF WAS CHANGED IN ORDER TO MAKE IT LARGER ON MOBILE */
+/* adds the transparent dark background */
+ .overlay {
+     position: fixed;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%;
+     background: rgba(0, 0, 0, 0.4);
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     z-index: 1000;
+}
+/* the styling used for all popup boxes (disregard the name) */
+ .addToGroupPopup {
+     background: #fff;
+     border-radius: 60px;
+     padding: 6rem;
+     width: 700px;
+     max-width: 95%;
+     text-align: center;
+     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+     font-size: 40pt;
+     font-family: var(--body-font, sans-serif);
+     position: relative;
+}
 
-      /* styles the container for the search bar */
-      .searchbarcontainer {
-        display: flex;
-        justify-content: center;
-        margin-top: 1rem;
-      }
+ .addToGroupPopup h3 {
+     font-size: 53pt;
+     margin-bottom: 2rem;
+}
+/* the close button in the upper right hand corner */
+ .addToGroupPopup .closebutton {
+     position: absolute;
+     top: 40px;
+     right: 50px;
+     background: none;
+     border: none;
+     font-size: 36pt;
+     color: var(--text-accent);
+}
+/* the options for adding groups */
+ .groupOptionRow {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     margin: 2rem 0;
+     font-family: var(--body-font);
+     font-size: 32pt;
+}
+/* Add button inside each row */
+ .addbutton {
+     font-family: var(--body-font);
+     font-size: 28pt;
+     padding: 1.2rem 2.4rem;
+     border: none;
+     border-radius: 35px;
+     background-color: var(--accent-color);
+     box-shadow: 0 6px 14px rgba(78, 22, 45, 0.2);
+     transition: transform 0.2s ease, background-color 0.2s ease;
+     margin-left: 1.5rem;
+}
+/* BRAND NEW CHANGE: STYLING FOR THE ENTIRE COMPLETED GROUP TASKS SECTION */
+ #completedtasksection {
+     margin-top: 2rem;
+     text-align: left;
+}
+ #completedtasksection h4 {
+     font-family: var(--header-font);
+     font-size: 50pt;
+     margin: 0 0 1.5rem 0;
+     color: var(--text-accent);
+}
+/* container for all shared, completed tasks */
+ #sharedtasklist {
+     list-style: none;
+     margin: 0;
+     padding: 0;
+     max-height: 400px;
+     overflow-y: auto;
+     border: 2px solid var(--border-color);
+     border-radius: 24px;
+     background: var(--accent-color);
+     box-shadow: inset 0 4px 10px var(--shadow-color);
+}
 
-      .searchbar {
-        width: 100%;
-        max-width: 800px;
-        padding: 1rem 2rem 0.6rem 5rem; /* some of this padding is responsible for maintaining the distance between the icon and the placeholder text */
-        font-size: 29pt;
-        background-color: #fdf9fb;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        outline: none;
-        font-family: var(--body-font, sans-serif);
-        border: 2px solid #d2c2cb;
-        border-radius: 25px;
-        background-image: url("./img/searchicon.png"); /* sets the icon as a bg image in order to display it (I didn't feel like creating another wrapper div to do this) */
-        background-repeat: no-repeat;
-        background-size: 60px 60px;
-        background-position: 0.8rem center;
-      }
+/* each individual shared completed task */
+ #sharedtasklist li {
+     display: flex;
+     align-items: center;
+     gap: 1.2rem;
+     padding: 1.4rem 1.8rem;
+     font-family: var(--body-font);
+     font-size: 30pt;
+     color: #362830;
+     border-bottom: 2px solid var(--border-color);
+}
+ #sharedtasklist li:last-child {
+     border-bottom: none;
+}
+/* small badge box showing the group name */
+ .taskaccentbox {
+     font-family: var(--body-font);
+     font-size: 30pt;
+     color: var(--text-accent);
+     background: var(--second-accent-color);
+     border: 2px solid var(--text-accent);
+     border-radius: 16px;
+     padding: 0.4rem 0.8rem;
+     white-space: nowrap;
+}
+ .taskname {
+     flex: 1;
+}
 
-      .friendscontainer {
-        display: flex;
-        flex-direction: column;
-        gap: 4rem;
-        margin: 2rem auto;
-        width: 90%;
-        max-width: 800px;
-        padding-bottom: 8rem; /* added to prevent obstruction from navbar */
-      }
-
-      .friendbox {
-        position: relative;
-        border: 2px solid #d2c2cb;
-        border-radius: 24px;
-        background: #fff;
-        padding: 1.8rem;
-        box-shadow: 0 6px 14px rgba(78, 22, 45, 0.12);
-        margin: 0.5rem 0;
-      }
-
-      /* styles the unfriend icon */
-      .unfriend {
-        position: absolute;
-        top: 1rem;
-        right: 1.5rem;
-        width: 67px;
-        height: 67px;
-      }
-
-      /* styles the add friend to group icon directly across */
-      .addToGroup {
-        position: absolute;
-        top: 1rem;
-        left: 1.5rem;
-        width: 67px;
-        height: 67px;
-      }
-
-      .profilepic {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        border: 3px solid #f0cfe0;
-        object-fit: cover;
-        margin-right: 1.2rem;
-      }
-
-      .friendname {
-        font-size: 40pt;
-        font-weight: bold;
-      }
-
-      .friendusername {
-        font-size: 34pt;
-      }
-
-      .leaderboardtasks {
-        margin-top: 10px;
-        font-size: 25pt;
-        font-weight: 600;
-        color: #4e162d;
-        border-radius: 16px;
-        border: 2px solid #d2c2cb;
-        font-family: var(--body-font, sans-serif);
-        background: #fff5fa;
-        display: inline-block; /* crucial to prevent the button from stretching to its full width */
-        padding: 1rem 1.5rem;
-      }
-
-      /* styles the bottom navbar */
-      .bottomnav {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background-color: var(--accent-color);
-        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
-        z-index: 100;
-        padding: 1rem 0;
-      }
-
-      .bottomnav ul {
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        margin: 0;
-        padding: 0;
-        list-style: none;
-      }
-
-      .bottomnav li {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        font-family: var(--body-font);
-        font-size: 25pt;
-        color: #362830;
-      }
-
-      .bottomnav img {
-        width: 100px;
-        height: auto;
-        margin-bottom: 0.5rem;
-      }
-
-      .addfriendbutton {
-        font-family: var(--body-font);
-        font-size: 24pt;
-        padding: 0.8rem 1.6rem;
-        border-radius: 25px;
-        background-color: var(--accent-color);
-        color: #362830;
-        border: none;
-        box-shadow: 0 4px 20px rgba(78, 22, 45, 0.2);
-        margin-top: 1rem;
-        display: inline-block;
-      }
-
-      /* adds the transparent dark background */
-      .overlay {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background: rgba(0, 0, 0, 0.4);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-      }
-
-      /* for the popup box */
-      .addToGroupPopup {
-        background: #fff;
-        border-radius: 50px;
-        padding: 3rem;
-        width: 500px;
-        max-width: 90%;
-        text-align: center;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
-        font-size: 20pt;
-        font-family: var(--body-font, sans-serif);
-        position: relative;
-      }
-
-      /* the x button in the top right */
-      .addToGroupPopup .closebutton {
-        position: absolute;
-        top: 20px;
-        right: 25px;
-        background: none;
-        border: none;
-        font-size: 20pt;
-        color: #4e162d;
-      }
-
-      /* each group option row */
-      .groupOptionRow {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin: 1rem 0;
-        font-family: var(--body-font);
-        font-size: 20pt;
-      }
-
-      /* styles the add to group buttons */
-      .addbutton {
-        font-family: var(--body-font);
-        font-size: 20pt;
-        padding: 0.8rem 1.6rem;
-        border: none;
-        border-radius: 25px;
-        background-color: #fff5fa;
-        box-shadow: 0 4px 10px rgba(78, 22, 45, 0.2);
-        transition: transform 0.2s ease, background-color 0.2s ease;
-        margin-left: 1rem;
-      }
+/* default empty message */
+ #sharedtasklist.empty::before {
+     content: "No group tasks completed yet!";
+     display: block;
+     padding: 6rem 4rem;
+     color: #6b5160;
+     font-style: italic;
+     font-size: 40pt;
+}
 
     </style>
+    <!-- NEW IMPORTS ADDED -->
+    <link href="https://fonts.cdnfonts.com/css/quicksand" rel="stylesheet" />
     <link href="https://fonts.cdnfonts.com/css/oooh-baby" rel="stylesheet" />
     <link href="https://fonts.cdnfonts.com/css/inria-serif" rel="stylesheet" />
-    <link
+        <link
       href="https://fonts.cdnfonts.com/css/cormorant-garamond"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Delius&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poiret+One&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fuzzy+Bubbles:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Emilys+Candy&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&display=swap"
       rel="stylesheet"
     />
   </head>
@@ -364,10 +438,24 @@
       <div class="addToGroupPopup">
         <button class="closebutton">X</button>
         <h3>Add Friend to Group</h3>
-        <!-- this is where each group option will render in -->
+        <!--  each group option shows up here -->
         <div id="groupOptions"></div>
       </div>
     </div>
+
+    <!-- NEW CHANGE: BRAND NEW OVERLAY ADDED TO DISPLAY THE NAME OF THE SHARED GROUP TASKS EACH USER HAS COMPLETED -->
+    <div id="profilebubble" class="overlay" style="display:none;">
+  <div class="addToGroupPopup">
+    <button class="closebutton">X</button>
+    <h3 id="profilename"></h3>
+    <img id="friendpfp" class="profilepic" />
+
+    <div id="completedtasksection">
+      <h4>Completed Group Tasks: </h4>
+      <ul id="sharedtasklist"></ul>
+    </div>
+  </div>
+</div>
 
     <!-- BOTTOM NAVBAR -->
     <div class="bottomnav">
@@ -388,21 +476,27 @@
     </div>
 
     <script type="module">
-      import { db, auth } from "./FirebaseInstances.js";
       import {
-        collection,
-        getDocs,
-        doc,
-        getDoc,
-        query,
-        where,
+          db,
+          auth
+      } from "./FirebaseInstances.js";
+      import {
+          collection,
+          getDocs,
+          doc,
+          deleteDoc,
+          getDoc,
+          query,
+          where,
       } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
-      import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
       import {
-        addFriend,
-        removeFriend,
-        addFriendToGroup,
-        getUserGroups,
+          onAuthStateChanged
+      } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+      import {
+          addFriend,
+          removeFriend,
+          addFriendToGroup,
+          getUserGroups,
       } from "./FriendsAndGroups.js";
 
       // search box
@@ -419,218 +513,231 @@
        * - showCompletedTasks: true if we should show the total # of completed tasks for that user (neceessary for the search bar)
        * */
       function createFriendBox(
-        userinfo,
-        uid,
-        forCurrentUser = false,
-        showCompletedTasks = true
+          userinfo,
+          uid,
+          forCurrentUser = false,
+          showCompletedTasks = true
       ) {
-        // creates the outer container for the friend box
-        const friendbox = document.createElement("div");
-        friendbox.className = "friendbox";
+          // creates the outer container for the friend box
+          const friendbox = document.createElement("div");
+          friendbox.className = "friendbox";
 
-        // creates an image for each friend's pfp
-        const profileimg = document.createElement("img");
-        profileimg.src = userinfo.profilePic || "../img/defaultprofile.png";
-        profileimg.className = "profilepic";
-        friendbox.appendChild(profileimg);
+          // creates an image for each friend's pfp
+          const profileimg = document.createElement("img");
+          profileimg.src = userinfo.profilePic || "../img/defaultprofile.png";
+          profileimg.className = "profilepic";
+          friendbox.appendChild(profileimg);
 
-        // creates the container for each friend's name & email
-        const friendinfo = document.createElement("div");
-        friendinfo.className = "friendinfo";
+          // creates the container for each friend's name & email
+          const friendinfo = document.createElement("div");
+          friendinfo.className = "friendinfo";
 
-        // creates a div for each friend's name (including your own, so that you can compare task stats)
-        const friendname = document.createElement("div");
-        friendname.className = "friendname";
-        friendname.textContent = forCurrentUser // if the box happens to be for the current user
-          ? userinfo.username || "You" // it should either display either 'you' or their actual username
-          : userinfo.username || "";
-        friendinfo.appendChild(friendname); // add the name into the container
+          // creates a div for each friend's name (including your own, so that you can compare task stats)
+          const friendname = document.createElement("div");
+          friendname.className = "friendname";
+          friendname.textContent = forCurrentUser // if the box happens to be for the current user
+              ?
+              userinfo.username || "You" // it should either display either 'you' or their actual username
+              :
+              userinfo.username || "";
+          friendinfo.appendChild(friendname); // add the name into the container
 
-        // creates another container exclusively for email
-        const email = document.createElement("div");
-        email.className = "friendemail";
-        email.textContent = userinfo.email || ""; // only shows the email if it can find one
-        friendinfo.appendChild(email);
+          // creates another container exclusively for email
+          const email = document.createElement("div");
+          email.className = "friendemail";
+          email.textContent = userinfo.email || ""; // only shows the email if it can find one
+          friendinfo.appendChild(email);
 
-        // adds the entire information section/container into the main friend box
-        friendbox.appendChild(friendinfo);
+          // adds the entire information section/container into the main friend box
+          friendbox.appendChild(friendinfo);
 
-        // note: showCompletedTasks is only false for search results (since you shouldn't be able to see the # of completed tasks for someone who isn't a friend)
-        if (showCompletedTasks) {
-          // creates a container for the # of completed tasks
-          const completedtasks = document.createElement("div");
-          completedtasks.className = "leaderboardtasks";
-          completedtasks.textContent =
-            (userinfo.tasksCompleted || 0) + " tasks completed this week";
-          friendbox.appendChild(completedtasks);
-        }
+          // note: showCompletedTasks is only false for search results (since you shouldn't be able to see the # of completed tasks for someone who isn't a friend)
+          if (showCompletedTasks) {
+              // creates a container for the # of completed tasks
+              const completedtasks = document.createElement("div");
+              completedtasks.className = "leaderboardtasks";
+              completedtasks.textContent =
+                  (userinfo.tasksCompleted || 0) + " tasks completed this week";
+              friendbox.appendChild(completedtasks);
+          }
 
-        // only shows the add to group & unfriend icons if the box isn't for the current user and if we're in the friends list
-        // note: showCompletedTasks is always true in the friends list (we should always be able to see the leaderboard for friends)
-        if (!forCurrentUser && showCompletedTasks) {
-          // creates the add to group icon
-          const addToGroupicon = document.createElement("img");
-          addToGroupicon.src = "../img/addtogroup.png";
-          addToGroupicon.className = "addToGroup";
-          addToGroupicon.addEventListener(
-            "click",
-            () => showaddtogroupPopup(auth.currentUser, uid) // when clicked, opens up the add to group popup
-          );
-          friendbox.appendChild(addToGroupicon);
+          // only shows the add to group & unfriend icons if the box isn't for the current user and if we're in the friends list
+          // note: showCompletedTasks is always true in the friends list (we should always be able to see the leaderboard for friends)
+          if (!forCurrentUser && showCompletedTasks) {
+              // creates the add to group icon
+              const addToGroupicon = document.createElement("img");
+              addToGroupicon.src = "../img/addtogroup.png";
+              addToGroupicon.className = "addToGroup";
+              addToGroupicon.addEventListener(
+                  "click",
+                  () => {
+                      event.stopPropagation(); // NEW CHANGE HERE: ADDED STOP PROPAGATION TO PREVENT BUTTONS FROM TRIGGERING THE COMPLETED TASK PROFILE OVERLAY
+                      showaddtogroupPopup(auth.currentUser, uid); // shows the add to group popup when clicked
+                  }
+              );
+              friendbox.appendChild(addToGroupicon);
 
-          // creates & adds the unfriend icon to the box
-          const unfriendicon = document.createElement("img");
-          unfriendicon.src = "../img/unfriend.png";
-          unfriendicon.className = "unfriend";
-          unfriendicon.addEventListener("click", async () => {
-            await removeFriend(auth.currentUser.uid, uid); // uses the helper function (from friendsandgroups.js)
-            loadfriendslist(auth.currentUser); // refreshes the friends list on click
+              // creates & adds the unfriend icon to the box
+              const unfriendicon = document.createElement("img");
+              unfriendicon.src = "../img/unfriend.png";
+              unfriendicon.className = "unfriend";
+              unfriendicon.addEventListener("click", async () => {
+                  event.stopPropagation(); // NEW CHANGE HERE TOO
+                  await removeFriend(auth.currentUser.uid, uid); // uses the helper function (from friendsandgroups.js)
+                  loadfriendslist(auth.currentUser); // refreshes the friends list on click
+              });
+              friendbox.appendChild(unfriendicon);
+          }
+
+          friendbox.addEventListener("click", async () => {
+              await showFriendProfile(uid);
           });
-          friendbox.appendChild(unfriendicon);
-        }
 
-        return friendbox; // returns a fully finished friends box, but doesn't add it to the page just yet
+          return friendbox; // returns a fully finished friends box, but doesn't add it to the page just yet
       }
 
       // LOADS IN THE USER'S FRIENDS LIST
       async function loadfriendslist(user) {
-        allfriendscontainer.innerHTML = ""; // removes placeholder friends
+          allfriendscontainer.innerHTML = ""; // removes placeholder friends
 
-        const loggedinuser = await getDoc(doc(db, "users", user.uid));
+          const loggedinuser = await getDoc(doc(db, "users", user.uid));
 
-        // shows the logged in user at the top of the friends list
-        if (loggedinuser.exists()) {
-          const loggedInUsersInfo = loggedinuser.data();
-          // creates a friend box for the user currently logged in
-          const loggedInUsersBox = createFriendBox(
-            loggedInUsersInfo,
-            user.uid,
-            true,
-            true
+          // shows the logged in user at the top of the friends list
+          if (loggedinuser.exists()) {
+              const loggedInUsersInfo = loggedinuser.data();
+              // creates a friend box for the user currently logged in
+              const loggedInUsersBox = createFriendBox(
+                  loggedInUsersInfo,
+                  user.uid,
+                  true,
+                  true
+              );
+
+              // adds the user's box to the top of the list
+              allfriendscontainer.appendChild(loggedInUsersBox);
+          }
+
+          // references the friendships collection
+          const friendshipscollection = collection(db, "friendships");
+
+          /**
+           * friendships are stored as friendship docs containing a pair of ids known as userA & userB
+           * because the logged in user could be in either slot for userA or userB, we have to check both sides so that we don't miss any friends
+           * this essentially collects the ids of all of your friends, no matter which side you were stored on
+           */
+          const friendshipsWhereUserIsA = await getDocs(
+              query(friendshipscollection, where("userA", "==", user.uid))
+          );
+          const friendshipsWhereUserIsB = await getDocs(
+              query(friendshipscollection, where("userB", "==", user.uid))
           );
 
-          // adds the user's box to the top of the list
-          allfriendscontainer.appendChild(loggedInUsersBox);
-        }
+          // for storing all ids of the user's friends
+          const friendIDS = [];
 
-        // references the friendships collection
-        const friendshipscollection = collection(db, "friendships");
+          // loops through friendships where the current user is userA
+          for (let i = 0; i < friendshipsWhereUserIsA.docs.length; i++) {
+              const friendshipDoc = friendshipsWhereUserIsA.docs[i]; // gets each doc
+              const friendshipInfo = friendshipDoc.data(); // gets the fields for each friendship
 
-        /**
-         * friendships are stored as friendship docs containing a pair of ids known as userA & userB
-         * because the logged in user could be in either slot for userA or userB, we have to check both sides so that we don't miss any friends
-         * this essentially collects the ids of all of your friends, no matter which side you were stored on
-         */
-        const friendshipsWhereUserIsA = await getDocs(
-          query(friendshipscollection, where("userA", "==", user.uid))
-        );
-        const friendshipsWhereUserIsB = await getDocs(
-          query(friendshipscollection, where("userB", "==", user.uid))
-        );
-
-        // for storing all ids of the user's friends
-        const friendIDS = [];
-
-        // loops through friendships where the current user is userA
-        for (let i = 0; i < friendshipsWhereUserIsA.docs.length; i++) {
-          const friendshipDoc = friendshipsWhereUserIsA.docs[i]; // gets each doc
-          const friendshipInfo = friendshipDoc.data(); // gets the fields for each friendship
-
-          // adds the other person (userB's) ID to the list of friend ids
-          friendIDS.push(friendshipInfo.userB);
-        }
-
-        // the same thing, but with userB
-        for (let i = 0; i < friendshipsWhereUserIsB.docs.length; i++) {
-          const friendshipDoc = friendshipsWhereUserIsB.docs[i];
-          const friendshipInfo = friendshipDoc.data();
-          friendIDS.push(friendshipInfo.userA);
-        }
-
-        // goes through the list of friend IDS
-        for (let i = 0; i < friendIDS.length; i++) {
-          const friendID = friendIDS[i];
-          // gets that friend's doc
-          const friendDoc = await getDoc(doc(db, "users", friendID));
-
-          if (friendDoc.exists()) {
-            const friendInfo = friendDoc.data(); // gets the data fields from their doc; username, pfp, email
-            // builds the friends box & adds it to the list
-            const friendBox = createFriendBox(
-              friendInfo,
-              friendID,
-              false,
-              true
-            );
-            allfriendscontainer.appendChild(friendBox);
+              // adds the other person (userB's) ID to the list of friend ids
+              friendIDS.push(friendshipInfo.userB);
           }
-        }
+
+          // the same thing, but with userB
+          for (let i = 0; i < friendshipsWhereUserIsB.docs.length; i++) {
+              const friendshipDoc = friendshipsWhereUserIsB.docs[i];
+              const friendshipInfo = friendshipDoc.data();
+              friendIDS.push(friendshipInfo.userA);
+          }
+
+          // goes through the list of friend IDS
+          for (let i = 0; i < friendIDS.length; i++) {
+              const friendID = friendIDS[i];
+              // gets that friend's doc
+              const friendDoc = await getDoc(doc(db, "users", friendID));
+
+              if (friendDoc.exists()) {
+                  const friendInfo = friendDoc.data(); // gets the data fields from their doc; username, pfp, email
+                  // builds the friends box & adds it to the list
+                  const friendBox = createFriendBox(
+                      friendInfo,
+                      friendID,
+                      false,
+                      true
+                  );
+                  allfriendscontainer.appendChild(friendBox);
+              }
+          }
       }
 
       // FOR THE SEARCH BAR
       searchbox.addEventListener("input", async () => {
-        // gets the text typed in, removes any extra whitespace, makes it case-insensitive
-        const searchedtext = searchbox.value.trim().toLowerCase();
+          // gets the text typed in, removes any extra whitespace, makes it case-insensitive
+          const searchedtext = searchbox.value.trim().toLowerCase();
 
-        // finds & removes all old elements with the searchresult class
-        document
-          .querySelectorAll(".searchresult")
-          .forEach((oldresult) => oldresult.remove());
+          // finds & removes all old elements with the searchresult class
+          document
+              .querySelectorAll(".searchresult")
+              .forEach((oldresult) => oldresult.remove());
 
-        // doesn't return anything if the searchbox was empty
-        if (!searchedtext) return;
+          // doesn't return anything if the searchbox was empty
+          if (!searchedtext) return;
 
-        // gets all of the users from firestore
-        const allusers = await getDocs(collection(db, "users"));
+          // gets all of the users from firestore
+          const allusers = await getDocs(collection(db, "users"));
 
-        // loops through each person
-        allusers.forEach((userdoc) => {
-          // gets the fields for each user
-          const userinfo = userdoc.data();
+          // loops through each person
+          allusers.forEach((userdoc) => {
+              // gets the fields for each user
+              const userinfo = userdoc.data();
 
-          // converts each username to lowercase
-          const username = userinfo.username.toLowerCase();
+              // converts each username to lowercase
+              const username = (userinfo.username || "").toLowerCase();
 
-          if (!username.includes(searchedtext)) return; // if the username doesn't match the text you searched up in the searchbox, then skip this user
-          if (auth.currentUser && userdoc.id === auth.currentUser.uid) return; // skip yourself (don't want to show yourself in the search results)
 
-          // creates a friend box for the user that matches the search result;
-          // params are: the user's data, their id, not the current user, don't show leaderboard tasks
-          const friendbox = createFriendBox(userinfo, userdoc.id, false, false);
 
-          // adds the searchresult class to this friends box so we know to remove it later
-          friendbox.classList.add("searchresult");
+              if (!username.includes(searchedtext)) return; // if the username doesn't match the text you searched up in the searchbox, then skip this user
+              if (auth.currentUser && userdoc.id === auth.currentUser.uid) return; // skip yourself (don't want to show yourself in the search results)
 
-          // creates the add friend button
-          const addfriendbutton = document.createElement("button");
-          addfriendbutton.className = "addfriendbutton";
-          addfriendbutton.textContent = "Add Friend";
+              // creates a friend box for the user that matches the search result;
+              // params are: the user's data, their id, not the current user, don't show leaderboard tasks
+              const friendbox = createFriendBox(userinfo, userdoc.id, false, false);
 
-          // calls addFriend() from friends & groups.js; adds them as a friend in firestore
-          addfriendbutton.addEventListener("click", async () => {
-            await addFriend(userdoc.id);
-            if (auth.currentUser) loadfriendslist(auth.currentUser); // reloads the friends list
+              // adds the searchresult class to this friends box so we know to remove it later
+              friendbox.classList.add("searchresult");
+
+              // creates the add friend button
+              const addfriendbutton = document.createElement("button");
+              addfriendbutton.className = "addfriendbutton";
+              addfriendbutton.textContent = "Add Friend";
+
+              // calls addFriend() from friends & groups.js; adds them as a friend in firestore
+              addfriendbutton.addEventListener("click", async () => {
+                  event.stopPropagation(); // NEW CHANGE HERE AS WELL
+                  await addFriend(userdoc.id);
+                  if (auth.currentUser) loadfriendslist(auth.currentUser); // reloads the friends list
+              });
+
+              friendbox.appendChild(addfriendbutton);
+
+              // adds the friend box that we just created to the top of the page so it looks like a search result
+              allfriendscontainer.prepend(friendbox);
           });
-
-          friendbox.appendChild(addfriendbutton);
-
-          // adds the friend box that we just created to the top of the page so it looks like a search result
-          allfriendscontainer.prepend(friendbox);
-        });
       });
 
       // SHOWS THE HIDDEN HTML POPUP FOR ADDING A FRIEND TO A GROUP
       async function showaddtogroupPopup(user, friendUid) {
           const usersGroups = await getUserGroups(user); // gets all groups for the logged in user
 
-          const hiddenPopup = document.getElementById("hiddengroupbox"); 
+          const hiddenPopup = document.getElementById("hiddengroupbox");
           const hiddenOptionContainer = document.getElementById("groupOptions");
 
           // clears any options that may have loaded in previously
           hiddenOptionContainer.innerHTML = "";
-          
+
           usersGroups.forEach((group) => {
-            // creates the wrapper for all the group options
+              // creates the wrapper for all the group options
               const option = document.createElement("div");
               option.className = "groupOptionRow";
 
@@ -652,7 +759,7 @@
               hiddenOptionContainer.appendChild(option); // adds it to the container
           });
 
-          hiddenPopup.style.display = "flex"; 
+          hiddenPopup.style.display = "flex";
 
           // hides the popup box when the x button is clicked
           hiddenPopup.querySelector(".closebutton").onclick = () => {
@@ -660,11 +767,159 @@
           };
       }
 
-      // loads in the friends list only if they're logged in
-      onAuthStateChanged(auth, (user) => {
-          if (user) loadfriendslist(user);
-          else return;
-      });
+      // NEW SECTION ADDED FOR THE CUSTOM FONTS (I know I should combine it with the other onAuthStateFunction but im too lazy)
+      onAuthStateChanged(auth, async (user) => {
+          if (user) {
+            const userdocref = doc(db, "users", user.uid);
+            const userdoc = await getDoc(userdocref);
+
+          if (userdoc.exists()) {
+            const data = userdoc.data();
+
+          if (data.headerFont) {
+            document.documentElement.style.setProperty("--header-font", data.headerFont);
+          }
+        }
+      // load the friends list once all of the fonts are applied
+      loadfriendslist(user);
+  }
+});
+
+     // BRAND NEW SECTION HERE: The Profile Popups W/ Completed Group Tasks
+      async function showFriendProfile(frienduid) {
+          const overlay = document.getElementById("profilebubble");
+          const friendname = document.getElementById("profilename");
+          const friendpfp = document.getElementById("friendpfp");
+          const sharedtaskslist = document.getElementById("sharedtasklist");
+
+          // clears out any old tasks
+          sharedtaskslist.innerHTML = "";
+
+          // loads in that friend's user doc from firestore
+          const friendref = doc(db, "users", frienduid);
+          const friendrecord = await getDoc(friendref);
+          // stops if the friend's doc doesn't exist
+          if (!friendrecord.exists()) return;
+          const frienddata = friendrecord.data();
+
+          // fills in the box will all of their info
+          friendname.textContent = frienddata.username || "unknown";
+          friendpfp.src = frienddata.profilePic || "../img/defaultprofile.png";
+
+          // checks the user's id to see what groups they're a part of
+          const currentuser = auth.currentUser;
+          if (!currentuser) return;
+
+          // loops through each group to find the ones that both them and the friend are in
+          const groupsfound = await getDocs(collection(db, "groups"));
+
+          // keeps track of whether or not any tasks were added, used to show an empty message if there are none
+          let addedanytasks = false;
+
+          // goes through each group and checks if people are members
+          for (let i = 0; i < groupsfound.docs.length; i++) {
+              const groupdoc = groupsfound.docs[i];
+              const groupdata = groupdoc.data();
+
+              // if for some reason, there is a group with no members, just default to an empty array
+              const membersarray = Array.isArray(groupdata.members) ? groupdata.members : [];
+
+            // loops through each group member
+              let currentuserinthisgroup = false;
+              let friendinthisgroup = false;
+              for (let j = 0; j < membersarray.length; j++) {
+                  const member = membersarray[j];
+                  if (member && member.uid === currentuser.uid) currentuserinthisgroup = true;
+                  if (member && member.uid === frienduid) friendinthisgroup = true;
+                  if (currentuserinthisgroup && friendinthisgroup) break; // stops early if we've found both of them
+              }
+
+              // if either person is not in the group, then skip that group altogether
+              if (!currentuserinthisgroup || !friendinthisgroup) continue;
+
+              // points to the new subcollection with completed tasks for the group
+              const completedtasks = collection(db, "groups", groupdoc.id, "completedTasks");
+              const completedtasksresult = await getDocs(completedtasks);
+
+              // loops through each completed task
+              for (let k = 0; k < completedtasksresult.docs.length; k++) {
+                  const taskdoc = completedtasksresult.docs[k];
+                  const taskdata = taskdoc.data();
+
+              // only shows tasks that are marked as done and completed by this specific friend
+              if (taskdata && taskdata.done && taskdata.completedBy === frienduid) {
+                  const listitem = document.createElement("li");
+
+                  const groupbadge = document.createElement("span");
+                  groupbadge.className = "taskaccentbox";
+                  groupbadge.textContent = groupdata.name || "group";
+
+                  const tasktitle = document.createElement("span");
+                  tasktitle.className = "taskname";
+                  tasktitle.textContent = taskdata.title || "task with no title!";
+
+                  listitem.appendChild(groupbadge);
+                  listitem.appendChild(tasktitle);
+                  sharedtaskslist.appendChild(listitem);
+
+                  if (sharedtaskslist.children.length >= 5) {
+                    await Promise.all(
+                    completedtasksresult.docs.map(d =>
+                    deleteDoc(doc(db, "groups", groupdoc.id, "completedTasks", d.id))
+                    )
+                  );
+                  sharedtaskslist.innerHTML = "";
+                  sharedtaskslist.classList.add("empty");
+                }
+                  addedanytasks = true;
+                }
+              }
+          }
+
+          // shows an empty placeholder if no tasks were added
+          if (!addedanytasks) {
+              sharedtaskslist.classList.add("empty");
+          } else {
+              sharedtaskslist.classList.remove("empty");
+          }
+
+          // shows the popup box
+          overlay.style.display = "flex";
+
+          // the close button
+          overlay.querySelector(".closebutton").onclick = () => {
+              overlay.style.display = "none";
+          };
+      }
+
+  // NEW CHANGE: JUST ANOTHER COPY PASTE OF THE ACCENT COLOR LOGIC FROM THE PREVIOUS PAGE
+onAuthStateChanged(auth, async (user) => {
+  if (!user) return;
+
+  const userdoc = await getDoc(doc(db, "users", user.uid));
+  if (!userdoc.exists()) return;
+
+  const data = userdoc.data();
+
+  if (data.accentColor) {
+              document.documentElement.style.setProperty(
+            "--top-button-color",
+            data.accentColor
+          );
+    document.documentElement.style.setProperty("--accent-color", data.accentColor);
+  }
+
+  const header = document.querySelector("header");
+  if (header) {
+    if (data.useSolidHeader) {
+      header.style.backgroundImage = "none";
+      header.style.backgroundColor = data.accentColor || "var(--accent-color)";
+    } else {
+      header.style.backgroundImage = "url('./img/lightcoloredbackdrop.png')";
+      header.style.backgroundColor = "";
+    }
+  }
+});
     </script>
   </body>
 </html>

@@ -225,14 +225,30 @@
         color: inherit;
       }
     </style>
-
+<!-- MORE CHANGES MADE HERE: ADDED ALL THE FONT IMPORTS -->
+    <link href="https://fonts.cdnfonts.com/css/quicksand" rel="stylesheet" />
     <link href="https://fonts.cdnfonts.com/css/oooh-baby" rel="stylesheet" />
     <link href="https://fonts.cdnfonts.com/css/inria-serif" rel="stylesheet" />
-    <link
+        <link
       href="https://fonts.cdnfonts.com/css/cormorant-garamond"
       rel="stylesheet"
     />
-    <link href="https://fonts.cdnfonts.com/css/quicksand" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Delius&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fuzzy+Bubbles:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Emilys+Candy&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&display=swap"
+      rel="stylesheet"
+    />
   </head>
 
   <body>
@@ -289,7 +305,7 @@
 
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-      import { getAuth } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+      import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
       import {
         getFirestore,
         doc,
@@ -350,7 +366,7 @@
         // if a button is selected, use its id; otherwise default to medium
         const chosenpriority = selectedprioritybutton
           ? selectedprioritybutton.id
-          : "medium";
+          : "";
 
         // prepares the new task object
         const newtaskdata = {
@@ -364,6 +380,31 @@
 
         window.location.href = "sofiascalendar.html"; // redirects back to the calendar page
       };
+
+    // MADE MORE CHANGES HERE!! ALL FOR THE ACCENT COLORS
+    onAuthStateChanged(auth, async (user) => {
+        if (!user) return;
+        const userdocref = doc(db, "users", user.uid);
+        const userdoc = await getDoc(userdocref);
+
+        if (userdoc.exists()) {
+            const data = userdoc.data();
+
+            if (data.headerFont) {
+                document.documentElement.style.setProperty("--header-font", data.headerFont);
+            }
+
+            if (data.accentColor) {
+                document.documentElement.style.setProperty("--accent-color", data.accentColor);
+
+                const header = document.querySelector("header");
+                if (header) {
+                    header.style.backgroundImage = "none";
+                    header.style.backgroundColor = data.accentColor;
+                }
+            }
+        }
+    });
     </script>
   </body>
 </html>

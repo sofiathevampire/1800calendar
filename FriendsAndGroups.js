@@ -10,10 +10,7 @@ import {
   deleteDoc,
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
-const USER_COLLECTION = "users";
-const GROUP_COLLECTION = "groups";
-
-// Add a friend by creating a new friendship doc
+// adds a friend by creating a new friendship doc
 export async function addFriend(frienduid) {
   const signedinuser = auth.currentUser;
   if (!signedinuser) {
@@ -29,7 +26,9 @@ export async function addFriend(frienduid) {
   });
 }
 
-// Remove a friend by finding and deleting the friendship document that matches
+// A COUPLE OF CHANGES WERE MADE HERE AS WELL
+
+// removes a friend by finding and deleting the friendship document that matches
 export async function removeFriend(currentuserid, frienduid) {
   const friendshipscollection = collection(db, "friendships");
   const friendshipsdocs = await getDocs(friendshipscollection);
@@ -49,7 +48,7 @@ export async function removeFriend(currentuserid, frienduid) {
   }
 }
 
-// Add a friend to a group by updating the group's members list
+// adds a friend to a group by updating the group's members list
 export async function addFriendToGroup(frienduid, groupuid) {
   const groupdocref = doc(db, "groups", groupuid);
   const groupdoc = await getDoc(groupdocref);
@@ -78,7 +77,7 @@ export async function addFriendToGroup(frienduid, groupuid) {
   });
 }
 
-// Get all groups that include the current user
+// gets all groups with the current user
 export async function getUserGroups(signedinuser) {
   const userid = signedinuser.uid;
   const groupscollection = collection(db, "groups");
@@ -91,12 +90,15 @@ export async function getUserGroups(signedinuser) {
     if (groupdata.members) {
       for (const member of groupdata.members) {
         if (member.uid === userid) {
-          usergroups.push({ id: groupdoc.id, name: groupdata.name });
+          usergroups.push({
+            id: groupdoc.id,
+            name: groupdata.name,
+            members: groupdata.members,
+          });
           break;
         }
       }
     }
   }
-
   return usergroups;
 }

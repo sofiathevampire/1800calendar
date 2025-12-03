@@ -9,6 +9,7 @@
         --shadow: rgba(78, 22, 45, 0.12);
         --bubble: #f2d9e6;
         --urgent: #fbe3eb;
+        --second-accent: #ffeef7; /* NEW ACCENT COLOR ADDED */
         --urgent-bubble-color: #f4c9d3;
       }
 
@@ -156,7 +157,7 @@
 
       /* bubbles!! (for both the urgent section and for each of the weekdays) */
       .taskbubble {
-        background: linear-gradient(135deg, var(--bubble), #ffeef7);
+        background: linear-gradient(135deg, var(--bubble), var(--second-accent)); /* ADDED THIS NEW CSS VARIABLE TO THE ROOT, USING IT TO SET THE CUSTOM ACCENT COLOR */
         color: #290a16;
         padding: 0.6rem 0.8rem;
         border-radius: 18px;
@@ -331,9 +332,8 @@
           <div class="daytitleheader">
             <span class="nameofday">Monday</span>
             <div class="date">Nov 17</div>
-          </div>
+          </div> <!-- NEW CHANGES TO EACH OF THE BOXES HERE!! REMOVED ALL OF THE DEFAULT ' ADD A SIMPLE TASK ' BOXES -->
           <div class="tasks" data-weekday="Monday">
-            <div class="emptyBubble">No tasks yet — add something simple</div>
             <div class="taskbubble">Buy Cookies</div>
             <div class="taskbubble">Call Lachesis</div>
             <div class="taskbubble">Swim Meet @7:00</div>
@@ -350,7 +350,6 @@
             <div class="date">Nov 18</div>
           </div>
           <div class="tasks" data-weekday="Tuesday">
-            <div class="emptyBubble">No tasks yet — add something simple</div>
             <div class="taskbubble">Meet David @ Rocky Point</div>
             <div class="taskbubble">Work on 1800</div>
           </div>
@@ -437,6 +436,32 @@
     appId: "1:135200443171:web:d842dc61da8fcae97d5a96",
     measurementId: "G-B0DBRK6MM2",
   };
+
+  // NEW CHANGES HERE!! EXACTLY THE SAME AS THE ONE FOR THE OTHER WEEKLY VIEW; UPDATES HARDCODED DATES
+  // updates each weekdate
+  function updateWeekDates() {
+  const today = new Date();
+  const startOfWeek = new Date(today);
+  startOfWeek.setDate(today.getDate() - today.getDay());
+
+  const weekdaySections = document.querySelectorAll(".weekday");
+
+  weekdaySections.forEach((section, index) => {
+    const thisDay = new Date(startOfWeek);
+    thisDay.setDate(startOfWeek.getDate() + index);
+    const months = [
+      "Jan","Feb","Mar","Apr","May","Jun",
+      "Jul","Aug","Sep","Oct","Nov","Dec"
+    ];
+    const formatted = months[thisDay.getMonth()] + " " + thisDay.getDate();
+
+    const dateElement = section.querySelector(".date");
+    if (dateElement) {
+      dateElement.textContent = formatted;
+    }
+  });
+}
+
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
@@ -530,7 +555,7 @@ async function setupGroupWeeklyView() {
   if (groupsnapshot.exists()) { // checks if the group doc exists
     const groupinfo = groupsnapshot.data(); // if it does, read all the fields inside of the doc
     const heading = document.querySelector(".topheading");
-    // changes the heading of each weekly calenar to correspond to the group's name
+    // changes the heading of each weekly calenDar to correspond to the group's name
     if (heading) {
       heading.textContent = groupinfo.name + " — This Week";
     }
@@ -539,7 +564,35 @@ async function setupGroupWeeklyView() {
   loadWeeklyGroupTasks(groupId);
 }
 
-window.onload = setupGroupWeeklyView;
+// NEW CHANGES MADE HERE FOR THE ACCENT COLOR & UPDATE TO HARDCODED DATES
+window.onload = () => {
+  setupGroupWeeklyView();
+  updateWeekDates(); 
+};
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) return;
+  const userdoc = await getDoc(doc(db, "users", user.uid));
+  if (!userdoc.exists()) return;
+
+  const data = userdoc.data();
+
+  if (data.accentColor) {
+    document.documentElement.style.setProperty("--second-accent", data.accentColor);
+    document.documentElement.style.setProperty("--accent", data.accentColor);
+  }
+
+  const header = document.querySelector("header");
+  if (header) {
+    if (data.useSolidHeader) {
+      header.style.backgroundImage = "none";
+      header.style.backgroundColor = data.accentColor || "var(--accent)";
+    } else {
+      header.style.backgroundImage = "linear-gradient(180deg, #fbf7f8, rgba(251,247,248,0.75))";
+      header.style.backgroundColor = "";
+    }
+  }
+});
 
 </script>
 
